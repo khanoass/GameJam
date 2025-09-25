@@ -1,3 +1,39 @@
-[gd_scene format=3 uid="uid://durc4x7dmglmm"]
+[gd_scene load_steps=3 format=3 uid="uid://durc4x7dmglmm"]
+
+[ext_resource type="PackedScene" uid="uid://cn2shtf45floc" path="res://turret.tscn" id="1_e2o6t"]
+[ext_resource type="PackedScene" uid="uid://vd8mwkhg0yfr" path="res://wall.tscn" id="2_feb5d"]
 
 [node name="Game" type="Node2D"]
+
+[node name="Turret" parent="." instance=ExtResource("1_e2o6t")]
+position = Vector2(481, 374)
+
+[node name="Wall" parent="." instance=ExtResource("2_feb5d")]
+position = Vector2(628, 261)
+
+[node name="Wall" parent="Wall" instance=ExtResource("2_feb5d")]
+position = Vector2(66, 145)
+
+[node name="Wall" parent="Wall/Wall" instance=ExtResource("2_feb5d")]
+position = Vector2(230, -267)
+
+[node name="Wall" parent="Wall/Wall/Wall" instance=ExtResource("2_feb5d")]
+position = Vector2(-517, 393)
+
+[node name="Wall" parent="Wall/Wall/Wall/Wall" instance=ExtResource("2_feb5d")]
+position = Vector2(-169, -129)
+
+[node name="Wall" parent="Wall/Wall/Wall/Wall/Wall" instance=ExtResource("2_feb5d")]
+position = Vector2(-29, -198)
+
+[node name="Wall" parent="Wall/Wall/Wall/Wall/Wall/Wall" instance=ExtResource("2_feb5d")]
+position = Vector2(221, -79)
+
+[node name="Wall" parent="Wall/Wall/Wall/Wall/Wall/Wall/Wall" instance=ExtResource("2_feb5d")]
+position = Vector2(240, -29)
+
+[node name="Wall" parent="Wall/Wall/Wall/Wall/Wall/Wall/Wall/Wall" instance=ExtResource("2_feb5d")]
+position = Vector2(217, 242)
+
+[node name="Wall" parent="Wall/Wall/Wall/Wall/Wall/Wall/Wall/Wall/Wall" instance=ExtResource("2_feb5d")]
+position = Vector2(-73, 226)
