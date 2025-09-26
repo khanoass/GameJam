@@ -5,22 +5,28 @@ extends Node2D
 @export var reach: float = 500.0
 @export var offset_degrees: float = 0.0
 @export var line_width: float = 1.0
-@export_flags_2d_physics var collision_mask := 1 << 1
+@export_flags_2d_physics var collision_mask := 2
 @export var turn_speed_deg := 90.0
 @export var moved := true
 
 @onready var rays_root: Node2D = $Rays
 @onready var beams_root: Node2D = $Beams
+@onready var minimal_beams_root: Node2D = $MinimalBeams
 
-# TODO: func build/update collision polygon
+@onready var body: StaticBody2D = $StaticBody2D
+@onready var fov_polygon: CollisionPolygon2D = $StaticBody2D/CollisionPolygon2D
 
 func _ready() -> void:
 	build_rays()
+	update_rays()
+	update_minimal()
 
 func _physics_process(dt: float) -> void:
 	update_rotation(dt)
 	update_rays()
+	update_minimal()
 
+# Updates turret movement
 func update_rotation(dt: float) -> void:
 	var dir := 0.0
 	if Input.is_action_pressed("turn_left"):
@@ -31,6 +37,7 @@ func update_rotation(dt: float) -> void:
 		moved = true
 	rotation += deg_to_rad(turn_speed_deg) * dir * dt
 
+# Builds logic rays & visual beams
 func build_rays() -> void:
 	for c in rays_root.get_children(): c.queue_free()
 	for c in beams_root.get_children(): c.queue_free()
@@ -60,6 +67,7 @@ func build_rays() -> void:
 		line.add_point(Vector2.ZERO)
 		beams_root.add_child(line)
 
+# Updates logic rays & visual beams
 func update_rays() -> void:
 	if !moved:
 		return
@@ -84,3 +92,31 @@ func update_rays() -> void:
 		line.set_point_position(0, Vector2.ZERO)
 		line.set_point_position(1, end_local)
 		moved = false
+		
+# Builds and updates minimal visual beams
+func update_minimal() -> void:
+	var seen_vertices := get_seen_vertices()
+	var cast_vertices := []
+	for v in seen_vertices:
+		if !vertex_blocked(v):
+			cast_vertices.push_back(v)
+	
+	# Cast a shadow edge
+	for v in cast_vertices:
+		var first := Vector2(v - position)
+		var dir := first.normalized()
+		var whole := reach*dir
+		var second := whole - first
+		
+		var line := Line2D.new()
+		line.default_color = Color.GREEN
+		line.set_point_position(0, v)
+		line.set_point_position(1, second)
+
+# Returns
+func get_seen_vertices() -> PackedVector2Array:
+	return PackedVector2Array()
+
+# Returns true if vertex v can be passed through the ray starting from turret
+func vertex_blocked(v: Vector2) -> bool:
+	return false

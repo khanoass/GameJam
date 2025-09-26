@@ -8,32 +8,32 @@
 [node name="Turret" parent="." instance=ExtResource("1_e2o6t")]
 position = Vector2(481, 374)
 
-[node name="Wall" parent="." instance=ExtResource("2_feb5d")]
+[node name="Wall10" parent="." instance=ExtResource("2_feb5d")]
+position = Vector2(924, 139)
+
+[node name="Wall9" parent="." instance=ExtResource("2_feb5d")]
+position = Vector2(814, 565)
+
+[node name="Wall8" parent="." instance=ExtResource("2_feb5d")]
+position = Vector2(887, 339)
+
+[node name="Wall7" parent="." instance=ExtResource("2_feb5d")]
+position = Vector2(670, 97)
+
+[node name="Wall6" parent="." instance=ExtResource("2_feb5d")]
+position = Vector2(430, 126)
+
+[node name="Wall5" parent="." instance=ExtResource("2_feb5d")]
+position = Vector2(209, 205)
+
+[node name="Wall4" parent="." instance=ExtResource("2_feb5d")]
+position = Vector2(238, 403)
+
+[node name="Wall3" parent="." instance=ExtResource("2_feb5d")]
+position = Vector2(407, 532)
+
+[node name="Wall2" parent="." instance=ExtResource("2_feb5d")]
+position = Vector2(694, 406)
+
+[node name="Wall1" parent="." instance=ExtResource("2_feb5d")]
 position = Vector2(628, 261)
-
-[node name="Wall" parent="Wall" instance=ExtResource("2_feb5d")]
-position = Vector2(66, 145)
-
-[node name="Wall" parent="Wall/Wall" instance=ExtResource("2_feb5d")]
-position = Vector2(230, -267)
-
-[node name="Wall" parent="Wall/Wall/Wall" instance=ExtResource("2_feb5d")]
-position = Vector2(-517, 393)
-
-[node name="Wall" parent="Wall/Wall/Wall/Wall" instance=ExtResource("2_feb5d")]
-position = Vector2(-169, -129)
-
-[node name="Wall" parent="Wall/Wall/Wall/Wall/Wall" instance=ExtResource("2_feb5d")]
-position = Vector2(-29, -198)
-
-[node name="Wall" parent="Wall/Wall/Wall/Wall/Wall/Wall" instance=ExtResource("2_feb5d")]
-position = Vector2(221, -79)
-
-[node name="Wall" parent="Wall/Wall/Wall/Wall/Wall/Wall/Wall" instance=ExtResource("2_feb5d")]
-position = Vector2(240, -29)
-
-[node name="Wall" parent="Wall/Wall/Wall/Wall/Wall/Wall/Wall/Wall" instance=ExtResource("2_feb5d")]
-position = Vector2(217, 242)
-
-[node name="Wall" parent="Wall/Wall/Wall/Wall/Wall/Wall/Wall/Wall/Wall" instance=ExtResource("2_feb5d")]
-position = Vector2(-73, 226)
