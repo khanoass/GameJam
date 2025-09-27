@@ -9,10 +9,10 @@ extends Node2D
 @export var polygon_color: Color = Color.from_rgba8(255, 0, 0, 80)
 @export var debug_color: Color = Color.from_rgba8(255, 255, 0, 150)
 @export_flags_2d_physics var collision_mask := 2
-@export var turn_speed_deg := 90.0
 @export var moved := true
-@export var EPS := 0.75
-@export var ANG_EPS := 0.001
+@export var turn_speed_deg := 120.0
+@export var speed := 300
+@export var eps := 0.75
 
 @onready var rays_root: Node2D = $Rays
 @onready var beams_root: Node2D = $Beams
@@ -27,6 +27,7 @@ func _ready() -> void:
 
 func _physics_process(dt: float) -> void:
 	update_rotation(dt)
+	update_movement(dt)
 	
 	if !moved:
 		return
@@ -46,6 +47,23 @@ func update_rotation(dt: float) -> void:
 		dir += 1.0
 		moved = true
 	rotation += deg_to_rad(turn_speed_deg) * dir * dt
+
+func update_movement(dt: float) -> void:
+	var dir := Vector2.ZERO
+	if Input.is_action_pressed("go_left"):
+		dir.x -= 1.0
+		moved = true
+	if Input.is_action_pressed("go_up"):
+		dir.y -= 1.0
+		moved = true
+	if Input.is_action_pressed("go_right"):
+		dir.x += 1.0
+		moved = true
+	if Input.is_action_pressed("go_down"):
+		dir.y += 1.0
+		moved = true
+	dir = dir.normalized()
+	position += dir * speed * dt
 
 # Builds logic rays & visual beams
 func build_fov() -> void:
@@ -144,8 +162,8 @@ func update_display() -> void:
 		var dir := base / base.length()
 		var dist := Vector2(v - global_position).length()
 
-		var from := v + dir * EPS
-		var to := from + dir * (reach - dist + EPS)
+		var from := v + dir * eps
+		var to := from + dir * (reach - dist + eps)
 
 		var query := PhysicsRayQueryParameters2D.create(from, to)
 		query.collision_mask = collision_mask
@@ -206,19 +224,19 @@ func vertex_blocked(v: Vector2) -> bool:
 	var space := get_world_2d().direct_space_state
 
 	# Before
-	var q1 := PhysicsRayQueryParameters2D.create(global_position, v + dir * EPS)
+	var q1 := PhysicsRayQueryParameters2D.create(global_position, v + dir * eps)
 	q1.collision_mask = collision_mask
 	q1.hit_from_inside = false
 
 	var hit1 := space.intersect_ray(q1)
 	if hit1.has("position"):
 		var d1 := global_position.distance_to(hit1.position)
-		if d1 + EPS < dist:
+		if d1 + eps < dist:
 			return true
 
 	# After
-	var from2 := v + dir * EPS
-	var to2   := from2 + dir * EPS
+	var from2 := v + dir * eps
+	var to2   := from2 + dir * eps
 	var q2 := PhysicsRayQueryParameters2D.create(from2, to2)
 	q2.collision_mask = collision_mask
 	q2.hit_from_inside = true
