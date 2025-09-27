@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://bus87eivbm7yb"]
+[gd_scene load_steps=8 format=3 uid="uid://bnqh10gubjlg2"]
 
-[ext_resource type="Script" uid="uid://dxe4apgyly64d" path="res://player.gd" id="1_4flbx"]
+[ext_resource type="Script" path="res://player.gd" id="1_4flbx"]
 [ext_resource type="Texture2D" uid="uid://b6hpkore075y8" path="res://mario.png" id="2_onrkg"]
+[ext_resource type="Script" uid="uid://cfvtau4ynpoou" path="res://polygon_2d.gd" id="3_i3pqv"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_sh265"]
 size = Vector2(12, 16)
@@ -30,6 +31,13 @@ animations = [{
 
 [node name="player" type="CharacterBody2D"]
 script = ExtResource("1_4flbx")
+top_speed = null
+jump_velocity = null
+gravity = null
+radius = null
+max_charge_time = null
+max_force = null
+charge_bar_path = null
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_sh265")
@@ -42,3 +50,10 @@ position_smoothing_enabled = true
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_2hs0m")
 autoplay = "default"
+
+[node name="Polygon2D" type="Polygon2D" parent="."]
+position = Vector2(3.8146973e-06, -16)
+scale = Vector2(3.3913047, 1.9480733)
+offset = Vector2(-9.435896, 13.859848)
+polygon = PackedVector2Array(7.730771, -12.53714, 9.500002, -13.919176, 11.269233, -12.53714, 9.500002, -16.130434)
+script = ExtResource("3_i3pqv")
