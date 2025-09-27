@@ -1,6 +1,6 @@
 extends Node2D
 
-@export var arc_degrees: float = 100.0
+@export var arc_degrees: float = 75.0
 @export var ray_density: float = 1.0
 @export var reach: float = 500.0
 @export var offset_degrees: float = 0.0
@@ -14,9 +14,6 @@ extends Node2D
 @onready var rays_root: Node2D = $Rays
 @onready var beams_root: Node2D = $Beams
 @onready var display_beams_root: Node2D = $DisplayBeams
-
-@onready var body: StaticBody2D = $StaticBody2D
-@onready var fov_polygon: CollisionPolygon2D = $StaticBody2D/CollisionPolygon2D
 
 func _ready() -> void:
 	build_fov()
@@ -92,30 +89,20 @@ func update_fov() -> void:
 
 		line.set_point_position(0, Vector2.ZERO)
 		line.set_point_position(1, end_local)
-		
-# Builds and updates minimal visual beams
-func update_display() -> void:
-	
-	# Cleanup
-	for child in display_beams_root.get_children():
-		child.queue_free()
 
-	var start_global := global_position
-	var space_state := get_world_2d().direct_space_state
+# Left/right FOV limit beams
+func add_limit_beams() -> void:
 	var facing := global_rotation + deg_to_rad(offset_degrees)
 	var half_arc := deg_to_rad(arc_degrees * 0.5)
-	var exclude := [self, body]
 
-	# Left/right FOV limit beams
 	for side in [-1, 1]:
 		var ang := facing + half_arc * float(side)
-		var max_end := start_global + Vector2.RIGHT.rotated(ang) * reach
+		var max_end := global_position + Vector2.RIGHT.rotated(ang) * reach
 
-		var query := PhysicsRayQueryParameters2D.create(start_global, max_end)
+		var query := PhysicsRayQueryParameters2D.create(global_position, max_end)
 		query.collision_mask = collision_mask
-		query.exclude = exclude
 
-		var hit := space_state.intersect_ray(query)
+		var hit := get_world_2d().direct_space_state.intersect_ray(query)
 		var end_global := max_end
 		if hit.has("position"):
 			end_global = hit.position
@@ -123,10 +110,19 @@ func update_display() -> void:
 		var line := Line2D.new()
 		line.width = line_width
 		line.default_color = Color.ORANGE_RED
-		line.add_point(display_beams_root.to_local(start_global))
+		line.add_point(display_beams_root.to_local(global_position))
 		line.add_point(display_beams_root.to_local(end_global))
 		display_beams_root.add_child(line)
+
+# Builds and updates minimal visual beams
+func update_display() -> void:
 	
+	# Cleanup
+	for child in display_beams_root.get_children():
+		child.queue_free()
+
+	add_limit_beams()
+
 	var seen_vertices := get_seen_vertices()
 	var cast_vertices := PackedVector2Array()
 
@@ -137,33 +133,29 @@ func update_display() -> void:
 	# Cast a shadow edge from each vertex out to the arc limit
 	for v in cast_vertices:
 		var base := v - global_position
-		var base_len := base.length()
-		if base_len < 1e-3:
+		if base.length() < 1e-3:
 			continue
-		var base_dir := base / base_len
+		var dir := base / base.length()
+		var dist := Vector2(v - global_position).length()
 
-		for delta in [-ANG_EPS, ANG_EPS]:
-			var dir := base_dir.rotated(delta)
+		var from := v + dir * EPS
+		var to := from + dir * (reach - dist + EPS)
 
-			var from := v + dir * EPS
-			var to := from + dir * (reach + EPS)
+		var query := PhysicsRayQueryParameters2D.create(from, to)
+		query.collision_mask = collision_mask
+		query.hit_from_inside = false
 
-			var query := PhysicsRayQueryParameters2D.create(from, to)
-			query.collision_mask = collision_mask
-			query.exclude = [self, body]
-			query.hit_from_inside = false
+		var hit := get_world_2d().direct_space_state.intersect_ray(query)
+		var end_global := to
+		if hit.has("position"):
+			end_global = hit.position
 
-			var hit := space_state.intersect_ray(query)
-			var end_global := to
-			if hit.has("position"):
-				end_global = hit.position
-
-			var line := Line2D.new()
-			line.width = line_width
-			line.default_color = Color.RED
-			line.add_point(display_beams_root.to_local(v))
-			line.add_point(display_beams_root.to_local(end_global))
-			display_beams_root.add_child(line)
+		var line := Line2D.new()
+		line.width = line_width
+		line.default_color = Color.RED
+		line.add_point(display_beams_root.to_local(v))
+		line.add_point(display_beams_root.to_local(end_global))
+		display_beams_root.add_child(line)
 
 # Returns all vertices in the fov of the turret
 func get_seen_vertices() -> PackedVector2Array:
@@ -210,7 +202,6 @@ func vertex_blocked(v: Vector2) -> bool:
 	# Before
 	var q1 := PhysicsRayQueryParameters2D.create(global_position, v + dir * EPS)
 	q1.collision_mask = collision_mask
-	q1.exclude = [self, body]
 	q1.hit_from_inside = false
 
 	var hit1 := space.intersect_ray(q1)
@@ -224,7 +215,6 @@ func vertex_blocked(v: Vector2) -> bool:
 	var to2   := from2 + dir * EPS
 	var q2 := PhysicsRayQueryParameters2D.create(from2, to2)
 	q2.collision_mask = collision_mask
-	q2.exclude = [self, body]
 	q2.hit_from_inside = true
 
 	var hit2 := space.intersect_ray(q2)

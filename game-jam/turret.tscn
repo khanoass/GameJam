@@ -4,6 +4,16 @@
 
 [node name="Turret" type="Node2D"]
 script = ExtResource("1_3oylf")
+arc_degrees = null
+ray_density = null
+reach = null
+offset_degrees = null
+line_width = null
+collision_mask = null
+turn_speed_deg = null
+moved = null
+EPS = null
+ANG_EPS = null
 
 [node name="DisplayBeams" type="Node2D" parent="."]
 
@@ -18,9 +28,3 @@ offset_left = -20.0
 offset_top = -20.0
 offset_right = 20.0
 offset_bottom = 20.0
-
-[node name="StaticBody2D" type="StaticBody2D" parent="."]
-visible = false
-
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="StaticBody2D"]
-visible = false
