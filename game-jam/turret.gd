@@ -1,10 +1,13 @@
 extends Node2D
 
 @export var arc_degrees: float = 75.0
-@export var ray_density: float = 1.0
+@export var ray_density: float = 2.0
 @export var reach: float = 500.0
 @export var offset_degrees: float = 0.0
-@export var line_width: float = 1.0
+@export var line_width: float = 4.0
+@export var line_color: Color = Color.from_rgba8(255, 255, 255, 150)
+@export var polygon_color: Color = Color.from_rgba8(255, 0, 0, 80)
+@export var debug_color: Color = Color.from_rgba8(255, 255, 0, 150)
 @export_flags_2d_physics var collision_mask := 2
 @export var turn_speed_deg := 90.0
 @export var moved := true
@@ -14,11 +17,13 @@ extends Node2D
 @onready var rays_root: Node2D = $Rays
 @onready var beams_root: Node2D = $Beams
 @onready var display_beams_root: Node2D = $DisplayBeams
+@onready var fov_polygon: Polygon2D = $FOV
 
 func _ready() -> void:
 	build_fov()
 	update_fov()
 	update_display()
+	update_fov_polygon_from_display()
 
 func _physics_process(dt: float) -> void:
 	update_rotation(dt)
@@ -29,6 +34,7 @@ func _physics_process(dt: float) -> void:
 	
 	update_fov()
 	update_display()
+	update_fov_polygon_from_display()
 
 # Updates turret movement
 func update_rotation(dt: float) -> void:
@@ -63,7 +69,7 @@ func build_fov() -> void:
 		# Visual
 		var line := Line2D.new()
 		line.width = line_width
-		line.default_color = Color.YELLOW
+		line.default_color = debug_color
 		line.add_point(Vector2.ZERO)
 		line.add_point(Vector2.ZERO)
 		beams_root.add_child(line)
@@ -109,7 +115,7 @@ func add_limit_beams() -> void:
 
 		var line := Line2D.new()
 		line.width = line_width
-		line.default_color = Color.ORANGE_RED
+		line.default_color = line_color
 		line.add_point(display_beams_root.to_local(global_position))
 		line.add_point(display_beams_root.to_local(end_global))
 		display_beams_root.add_child(line)
@@ -152,7 +158,7 @@ func update_display() -> void:
 
 		var line := Line2D.new()
 		line.width = line_width
-		line.default_color = Color.RED
+		line.default_color = line_color
 		line.add_point(display_beams_root.to_local(v))
 		line.add_point(display_beams_root.to_local(end_global))
 		display_beams_root.add_child(line)
@@ -221,3 +227,43 @@ func vertex_blocked(v: Vector2) -> bool:
 	if hit2.has("position"):
 		return true
 	return false
+
+# Updates the fov polygon
+func update_fov_polygon_from_display() -> void:
+	var pts := []
+
+	for child in beams_root.get_children():
+		if child is Line2D and child.get_point_count() >= 2:
+			var p := Vector2(child.get_point_position(1))
+			if p.length_squared() < 1e-6:
+				continue
+			var ang := p.angle()
+			pts.append({ "ang": ang, "p": p })
+
+	if pts.size() < 2:
+		fov_polygon.polygon = PackedVector2Array()
+		return
+
+	pts.sort_custom(func(a, b): return a.ang < b.ang)
+
+	var ANG_EPS_LOCAL := 0.0005
+	var filtered: Array = []
+	for e in pts:
+		if filtered.is_empty():
+			filtered.append(e)
+		else:
+			var last = filtered[filtered.size() - 1]
+			if abs(wrapf(e.ang - last.ang, -PI, PI)) < ANG_EPS_LOCAL:
+				# keep the farther endpoint
+				if e.p.length_squared() > last.p.length_squared():
+					filtered[filtered.size() - 1] = e
+			else:
+				filtered.append(e)
+
+	var poly := PackedVector2Array()
+	poly.push_back(Vector2.ZERO)
+	for e in filtered:
+		poly.push_back(e.p)
+
+	fov_polygon.polygon = poly
+	fov_polygon.color = polygon_color

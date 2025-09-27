@@ -4,23 +4,16 @@
 
 [node name="Turret" type="Node2D"]
 script = ExtResource("1_3oylf")
-arc_degrees = null
-ray_density = null
-reach = null
-offset_degrees = null
-line_width = null
-collision_mask = null
-turn_speed_deg = null
-moved = null
-EPS = null
-ANG_EPS = null
 
-[node name="DisplayBeams" type="Node2D" parent="."]
+[node name="Rays" type="Node2D" parent="."]
+visible = false
 
 [node name="Beams" type="Node2D" parent="."]
 visible = false
 
-[node name="Rays" type="Node2D" parent="."]
+[node name="FOV" type="Polygon2D" parent="."]
+
+[node name="DisplayBeams" type="Node2D" parent="."]
 visible = false
 
 [node name="ColorRect" type="ColorRect" parent="."]
@@ -28,3 +21,4 @@ offset_left = -20.0
 offset_top = -20.0
 offset_right = 20.0
 offset_bottom = 20.0
+color = Color(0.20364204, 0.4203241, 1, 1)
