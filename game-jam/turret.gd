@@ -23,7 +23,7 @@ func _ready() -> void:
 	build_fov()
 	update_fov()
 	update_display()
-	update_fov_polygon_from_display()
+	update_fov_polygon()
 
 func _physics_process(dt: float) -> void:
 	update_rotation(dt)
@@ -35,9 +35,8 @@ func _physics_process(dt: float) -> void:
 	
 	update_fov()
 	update_display()
-	update_fov_polygon_from_display()
+	update_fov_polygon()
 
-# Updates turret movement
 func update_rotation(dt: float) -> void:
 	var dir := 0.0
 	if Input.is_action_pressed("turn_left"):
@@ -47,7 +46,6 @@ func update_rotation(dt: float) -> void:
 		dir += 1.0
 		moved = true
 	rotation += deg_to_rad(turn_speed_deg) * dir * dt
-
 func update_movement(dt: float) -> void:
 	var dir := Vector2.ZERO
 	if Input.is_action_pressed("go_left"):
@@ -114,30 +112,6 @@ func update_fov() -> void:
 		line.set_point_position(0, Vector2.ZERO)
 		line.set_point_position(1, end_local)
 
-# Left/right FOV limit beams
-func add_limit_beams() -> void:
-	var facing := global_rotation + deg_to_rad(offset_degrees)
-	var half_arc := deg_to_rad(arc_degrees * 0.5)
-
-	for side in [-1, 1]:
-		var ang := facing + half_arc * float(side)
-		var max_end := global_position + Vector2.RIGHT.rotated(ang) * reach
-
-		var query := PhysicsRayQueryParameters2D.create(global_position, max_end)
-		query.collision_mask = collision_mask
-
-		var hit := get_world_2d().direct_space_state.intersect_ray(query)
-		var end_global := max_end
-		if hit.has("position"):
-			end_global = hit.position
-
-		var line := Line2D.new()
-		line.width = line_width
-		line.default_color = line_color
-		line.add_point(display_beams_root.to_local(global_position))
-		line.add_point(display_beams_root.to_local(end_global))
-		display_beams_root.add_child(line)
-
 # Builds and updates minimal visual beams
 func update_display() -> void:
 	
@@ -145,7 +119,7 @@ func update_display() -> void:
 	for child in display_beams_root.get_children():
 		child.queue_free()
 
-	add_limit_beams()
+	add_limit_beams_to_display()
 
 	var seen_vertices := get_seen_vertices()
 	var cast_vertices := PackedVector2Array()
@@ -181,6 +155,30 @@ func update_display() -> void:
 		line.add_point(display_beams_root.to_local(end_global))
 		display_beams_root.add_child(line)
 
+# Left/right FOV limit beams
+func add_limit_beams_to_display() -> void:
+	var facing := global_rotation + deg_to_rad(offset_degrees)
+	var half_arc := deg_to_rad(arc_degrees * 0.5)
+
+	for side in [-1, 1]:
+		var ang := facing + half_arc * float(side)
+		var max_end := global_position + Vector2.RIGHT.rotated(ang) * reach
+
+		var query := PhysicsRayQueryParameters2D.create(global_position, max_end)
+		query.collision_mask = collision_mask
+
+		var hit := get_world_2d().direct_space_state.intersect_ray(query)
+		var end_global := max_end
+		if hit.has("position"):
+			end_global = hit.position
+
+		var line := Line2D.new()
+		line.width = line_width
+		line.default_color = line_color
+		line.add_point(display_beams_root.to_local(global_position))
+		line.add_point(display_beams_root.to_local(end_global))
+		display_beams_root.add_child(line)
+
 # Returns all vertices in the fov of the turret
 func get_seen_vertices() -> PackedVector2Array:
 	
@@ -203,6 +201,7 @@ func get_seen_vertices() -> PackedVector2Array:
 	
 	return out
 
+# Returns true if vertex is in fov, false otherwise
 func vertex_in_fov(v: Vector2) -> bool:
 	if global_position.distance_to(v) > reach:
 		return false
@@ -213,7 +212,7 @@ func vertex_in_fov(v: Vector2) -> bool:
 	var delta := float(abs(wrapf(to_v - facing, -PI, PI)))
 	return delta <= deg_to_rad(arc_degrees) * 0.5
 
-# Returns true if vertex v can be passed through the ray starting from turret
+# Returns true if a ray shot from turret can get to and pass through the vertex v
 func vertex_blocked(v: Vector2) -> bool:
 	var dir := v - global_position
 	var dist := dir.length()
@@ -247,7 +246,7 @@ func vertex_blocked(v: Vector2) -> bool:
 	return false
 
 # Updates the fov polygon
-func update_fov_polygon_from_display() -> void:
+func update_fov_polygon() -> void:
 	var pts := []
 
 	for child in beams_root.get_children():
@@ -264,14 +263,13 @@ func update_fov_polygon_from_display() -> void:
 
 	pts.sort_custom(func(a, b): return a.ang < b.ang)
 
-	var ANG_EPS_LOCAL := 0.0005
 	var filtered: Array = []
 	for e in pts:
 		if filtered.is_empty():
 			filtered.append(e)
 		else:
 			var last = filtered[filtered.size() - 1]
-			if abs(wrapf(e.ang - last.ang, -PI, PI)) < ANG_EPS_LOCAL:
+			if abs(wrapf(e.ang - last.ang, -PI, PI)) < 0.0005:
 				# keep the farther endpoint
 				if e.p.length_squared() > last.p.length_squared():
 					filtered[filtered.size() - 1] = e
