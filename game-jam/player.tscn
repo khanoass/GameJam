@@ -50,6 +50,7 @@ position = Vector2(3.8146973e-06, -16)
 scale = Vector2(3.3913047, 1.9480733)
 color = Color(0.33056748, 0.8078236, 0.92993534, 1)
 offset = Vector2(-9.435896, 13.859848)
+antialiased = true
 polygon = PackedVector2Array(7.666664, -13.34652, 8.551279, -13.859848, 9.435895, -13.859848, 10.32051, -13.859848, 11.205126, -13.34652, 9.435895, -15.913158)
 script = ExtResource("3_i3pqv")
 

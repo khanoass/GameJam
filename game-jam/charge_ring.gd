@@ -68,7 +68,7 @@ func _draw() -> void:
 	var start := deg_to_rad(start_angle_deg)
 	var span := deg_to_rad(arc_span_deg)
 	var sweep := span * _value
-	var aa := false
+	var aa := true
 	var pts: int = max(24, int(arc_span_deg))  # Bogenqualität
 	
 	# Gutter (gesamter Teilbogen)
@@ -92,12 +92,12 @@ func _draw() -> void:
 		var p_end_out   = center + Vector2.RIGHT.rotated(start + span + offset) * out_radius
 		var p_start_in = center + Vector2.RIGHT.rotated(start - offset) * inner_radius
 		var p_end_in   = center + Vector2.RIGHT.rotated(start + span + offset) * inner_radius
-		draw_line(p_start_out, p_start_in, oc, outline_thickness * 2)
-		draw_line(p_end_out, p_end_in, oc, outline_thickness * 2)
+		draw_line(p_start_out, p_start_in, oc, outline_thickness, aa)
+		draw_line(p_end_out, p_end_in, oc, outline_thickness, aa)
 		
 	# Fortschritt
 	if sweep > 0.0001:
-		draw_arc(center, radius, start, start + sweep, max(12, int(arc_span_deg * _value)), bar_color, thickness, aa)
+		draw_arc(center, radius, start, start + sweep, max(12, int(arc_span_deg * _value)), bar_color, thickness, false)
 		
 		if rounded_caps:
 			var rcap := thickness * 0.5

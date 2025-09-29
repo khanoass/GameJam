@@ -3,7 +3,10 @@ extends CharacterBody2D
 # Physische Gegebenheiten
 @export var gravity: float = 1200           # Erdanziehungskraft
 @export var gravity_vector: Vector2 = Vector2(0, gravity) # ... als Vektor
-@export var dash_decay := 2.0                # Luftwiderstand bzw. Geschwindigkeitsabfall pro Sekunde
+@export var dash_decay := 2.0               # Luftwiderstand bzw. Geschwindigkeitsabfall pro Sekunde
+@export var bounce_coeff := 0.9             # 0..1 (Energieerhalt beim Abprallen)
+@export var min_speed_after_bounce := 60.0
+@export var slide_keep_ratio := 0.85        # 0..1 (wie viel Speed beim Sliden erhalten bleibt)
 
 # Spielereigenschaften
 @export var charge_time: float = 0.8         # Sekunden bis zur Maximal-Ladung
@@ -82,17 +85,37 @@ func _dash_step(delta: float) -> void:
 	
 	if collision:
 		var collider := collision.get_collider()
-		_dashing = false
-		_touching = true
-		velocity = Vector2.ZERO
+		var n := collision.get_normal().normalized()
 		
 		if collider and collider.is_in_group("StickyWall"):
-			return	
-		elif collider and is_on_floor():
+			# Verhalten 1) Kleben: hart stoppen
+			velocity = Vector2.ZERO
+			_touching = true
+			_dashing = false
+			return
+		elif collider and collider.is_in_group("BounceWall"):
+			# Verhalten 2) Abprallen: v' = v.bounce(n) * koeff
+			velocity = velocity.bounce(n) * bounce_coeff
+			if velocity.length() < min_speed_after_bounce:
+				# Schutz gegen „steckenbleiben“: entweder stoppen oder Mindest-Tempo
+				_dashing = false
+				_touching = true
+				velocity = Vector2.ZERO
+				# Restbewegung im selben Frame optional weglassen → nächste Physik-Iteration macht weiter
+			return
+		elif collider and collider.is_in_group("SlideWall"):
+			# Verhalten 3) Entlang gleiten: v' = v.slide(n)
+			velocity = velocity.slide(n) * slide_keep_ratio
+			if velocity.length() < min_speed_after_bounce:
+				_dashing = false
+				_touching = true
+				velocity = Vector2.ZERO
 			return
 		else:
-			# Verhalten für nicht definierte Wände = StickyWall
-			return
+			# Default: wie „normale Wand“ behandeln → kleben
+			_dashing = false
+			_touching = true
+			velocity = Vector2.ZERO
 	else:
 		# Verhalten bei keiner kollision
 		velocity = velocity.move_toward(Vector2.ZERO, dash_decay * delta) + gravity_vector * delta
