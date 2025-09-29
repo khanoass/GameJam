@@ -1,6 +1,6 @@
 extends Polygon2D
 
-@export var radius: float = 20.0
+@export var radius: float = 22.0
 
 @onready var printed: bool = false
 
