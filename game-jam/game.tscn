@@ -21,3 +21,43 @@ shape = SubResource("WorldBoundaryShape2D_80nbo")
 position = Vector2(-1, 2)
 scale = Vector2(264, 6.5)
 mesh = SubResource("BoxMesh_80nbo")
+
+[gd_scene load_steps=3 format=3 uid="uid://durc4x7dmglmm"]
+
+[ext_resource type="PackedScene" uid="uid://cn2shtf45floc" path="res://turret.tscn" id="1_e2o6t"]
+[ext_resource type="PackedScene" uid="uid://vd8mwkhg0yfr" path="res://wall.tscn" id="2_feb5d"]
+
+[node name="Turret" parent="." instance=ExtResource("1_e2o6t")]
+position = Vector2(481, 374)
+
+[node name="Walls" type="Node2D" parent="." groups=["WallsGroup"]]
+
+[node name="Wall10" parent="Walls" instance=ExtResource("2_feb5d")]
+position = Vector2(924, 139)
+
+[node name="Wall9" parent="Walls" instance=ExtResource("2_feb5d")]
+position = Vector2(814, 565)
+
+[node name="Wall8" parent="Walls" instance=ExtResource("2_feb5d")]
+position = Vector2(887, 339)
+
+[node name="Wall7" parent="Walls" instance=ExtResource("2_feb5d")]
+position = Vector2(670, 97)
+
+[node name="Wall6" parent="Walls" instance=ExtResource("2_feb5d")]
+position = Vector2(430, 126)
+
+[node name="Wall5" parent="Walls" instance=ExtResource("2_feb5d")]
+position = Vector2(209, 205)
+
+[node name="Wall4" parent="Walls" instance=ExtResource("2_feb5d")]
+position = Vector2(238, 403)
+
+[node name="Wall3" parent="Walls" instance=ExtResource("2_feb5d")]
+position = Vector2(407, 532)
+
+[node name="Wall2" parent="Walls" instance=ExtResource("2_feb5d")]
+position = Vector2(694, 406)
+
+[node name="Wall1" parent="Walls" instance=ExtResource("2_feb5d")]
+position = Vector2(628, 261)
