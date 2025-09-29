@@ -1,8 +1,9 @@
 [gd_scene load_steps=7 format=4 uid="uid://bk1l0c5skfrpt"]
 
-[ext_resource type="PackedScene" path="res://player.tscn" id="1_y1jsw"]
-[ext_resource type="Texture2D" uid="uid://cobcvnoan8w2j" path="res://map_tiles.png" id="3_mvtj7"]
-[ext_resource type="PackedScene" path="res://killzone.tscn" id="4_waekl"]
+[ext_resource type="PackedScene" uid="uid://bnqh10gubjlg2" path="res://player.tscn" id="1_y1jsw"]
+[ext_resource type="Texture2D" uid="uid://cnm7bh8qo7suc" path="res://map.png" id="2_1kog2"]
+[ext_resource type="Texture2D" uid="uid://bdng10mfgr6y3" path="res://bigger_map_tiles.png" id="3_2xot7"]
+[ext_resource type="PackedScene" uid="uid://bvpdo0ixhcw42" path="res://killzone.tscn" id="4_waekl"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_xlsm3"]
 texture = ExtResource("3_mvtj7")
