@@ -184,14 +184,16 @@ func get_seen_vertices() -> PackedVector2Array:
 	
 	# Get all vertices
 	var candidates := PackedVector2Array()
-	for wall in get_tree().get_first_node_in_group("WallsGroup").get_children():
-		var rect := wall.get_child(0) as ColorRect
-		var p := rect.global_position
-		var s := rect.size
-		candidates.push_back(p)
-		candidates.push_back(Vector2(p.x + s.x, p.y))
-		candidates.push_back(Vector2(p.x + s.x, p.y + s.y))
-		candidates.push_back(Vector2(p.x, p.y + s.y))
+	var wall_parent = get_tree().get_first_node_in_group("WallsGroup")
+	if wall_parent:
+		for wall in get_tree().get_first_node_in_group("WallsGroup").get_children():
+			var rect := wall.get_child(0) as ColorRect
+			var p := rect.global_position
+			var s := rect.size
+			candidates.push_back(p)
+			candidates.push_back(Vector2(p.x + s.x, p.y))
+			candidates.push_back(Vector2(p.x + s.x, p.y + s.y))
+			candidates.push_back(Vector2(p.x, p.y + s.y))
 	
 	# Check if seen
 	var out := PackedVector2Array()

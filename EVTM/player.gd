@@ -24,6 +24,7 @@ var _charge_elapsed: float = 0.0
 var _ring: Node2D
 
 func _ready() -> void:
+	add_to_group("player")
 	_ring = get_node_or_null(ring_path)
 	if _ring:
 		_ring.visible = true
