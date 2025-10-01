@@ -82,41 +82,69 @@ func _check_for_charge(delta: float) -> void:
 	
 func _dash_step(delta: float) -> void:
 	var motion := velocity * delta
-	var collision := move_and_collide(motion)
-	
+	var collision = move_and_collide(motion)
+	print("moving")
+	print(collision)
 	if collision:
 		var collider := collision.get_collider()
 		var n := collision.get_normal().normalized()
-		
-		if collider and collider.is_in_group("StickyWall"):
-			# Verhalten 1) Kleben: hart stoppen
-			velocity = Vector2.ZERO
-			_touching = true
-			_dashing = false
-			return
-		elif collider and collider.is_in_group("BounceWall"):
-			# Verhalten 2) Abprallen: v' = v.bounce(n) * koeff
-			velocity = velocity.bounce(n) * bounce_coeff
-			if velocity.length() < min_speed_after_bounce:
-				# Schutz gegen „steckenbleiben“: entweder stoppen oder Mindest-Tempo
-				_dashing = false
+		print(collider, " is ", collider.get_class())
+		var tilemap = collider as TileMap
+		if tilemap:
+			print(tilemap)
+			print("Name:", tilemap.name) 
+			var coords = tilemap.local_to_map(collision.get_position())
+			print(coords)
+			var source_id = tilemap.get_cell_source_id(0, coords)
+			if source_id == -1:
 				_touching = true
-				velocity = Vector2.ZERO
-				# Restbewegung im selben Frame optional weglassen → nächste Physik-Iteration macht weiter
-			return
-		elif collider and collider.is_in_group("SlideWall"):
-			# Verhalten 3) Entlang gleiten: v' = v.slide(n)
-			velocity = velocity.slide(n) * slide_keep_ratio
-			if velocity.length() < min_speed_after_bounce:
 				_dashing = false
-				_touching = true
-				velocity = Vector2.ZERO
-			return
-		else:
-			# Default: wie „normale Wand“ behandeln → kleben
-			_dashing = false
-			_touching = true
-			velocity = Vector2.ZERO
+				return
+			print(source_id)
+			var atlas_coords = tilemap.get_cell_atlas_coords(0, coords) # for tiles in atlases
+			var alternative = tilemap.get_cell_alternative_tile(0, coords)
+			var data = tilemap.tile_set.get_source(source_id).get_tile_data(atlas_coords, alternative)
+			if data:
+				var tile_type = data.get_custom_data("wall_type")
+				print("Tile type:", tile_type)
+				print("Custom data:", data)
+				match tile_type:
+					"sticky":
+						print("sticking")
+						velocity = Vector2.ZERO
+						_touching = true
+						_dashing = false
+						return
+					"bouncy":
+						print("bouncing")
+						# Verhalten 2) Abprallen: v' = v.bounce(n) * koeff
+						velocity = velocity.bounce(n) * bounce_coeff
+						if velocity.length() < min_speed_after_bounce:
+							# Schutz gegen „steckenbleiben“: entweder stoppen oder Mindest-Tempo
+							_dashing = false
+							_touching = true
+							velocity = Vector2.ZERO
+							# Restbewegung im selben Frame optional weglassen → nächste Physik-Iteration macht weiter
+						return
+					"sliding":
+						print("slinding")
+						# Verhalten 3) Entlang gleiten: v' = v.slide(n)
+						velocity = velocity.slide(n) * slide_keep_ratio
+						if velocity.length() < min_speed_after_bounce:
+							_dashing = false
+							_touching = true
+							velocity = Vector2.ZERO
+						return
+					"normal":
+						print("normal")
+						# Default: wie „normale Wand“ behandeln → kleben
+						velocity = Vector2.ZERO
+						_touching = true
+						_dashing = false
+						return
+					"default":
+						_dashing = false
+						_touching = true
 	else:
 		# Verhalten bei keiner kollision
 		velocity = velocity.move_toward(Vector2.ZERO, dash_decay * delta) + gravity_vector * delta

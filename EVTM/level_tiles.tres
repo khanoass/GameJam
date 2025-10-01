@@ -19,6 +19,7 @@ texture = ExtResource("1_bmg4g")
 
 [resource]
 physics_layer_0/collision_layer = 1
-custom_data_layer_0/name = "type"
+custom_data_layer_0/name = "wall_type"
 custom_data_layer_0/type = 4
 sources/0 = SubResource("TileSetAtlasSource_2ca8a")
+metadata/isWall = true
