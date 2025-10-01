@@ -135,13 +135,6 @@ func _dash_step(delta: float) -> void:
 							_touching = true
 							velocity = Vector2.ZERO
 						return
-					"normal":
-						print("normal")
-						# Default: wie „normale Wand“ behandeln → kleben
-						velocity = Vector2.ZERO
-						_touching = true
-						_dashing = false
-						return
 					"default":
 						_dashing = false
 						_touching = true
