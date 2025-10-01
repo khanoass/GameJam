@@ -2,64 +2,72 @@ extends Node2D
 
 @export var arc_degrees: float = 75.0
 @export var ray_density: float = 2.0
-@export var reach: float = 500.0
+@export var reach: float = 200.0
 @export var offset_degrees: float = 0.0
-@export var line_width: float = 4.0
-@export var line_color: Color = Color.from_rgba8(255, 255, 255, 150)
-@export var polygon_color: Color = Color.from_rgba8(255, 0, 0, 80)
-@export var debug_color: Color = Color.from_rgba8(255, 255, 0, 150)
-@export_flags_2d_physics var collision_mask := 2
-@export var moved := true
+@export var line_width: float = 2.0
+@export_flags_2d_physics var collision_mask := 1
 @export var turn_speed_deg := 120.0
 @export var speed := 300
-@export var eps := 0.75
 
 @onready var rays_root: Node2D = $Rays
 @onready var beams_root: Node2D = $Beams
 @onready var display_beams_root: Node2D = $DisplayBeams
 @onready var fov_polygon: Polygon2D = $FOV
 
+var _needs_update := true
+var _update_scheduled := false
+var _first_tick := true
+var _moved = false
+var _eps := 0.75
+
+var line_color: Color = Color.from_rgba8(255, 255, 255, 150)
+var polygon_color: Color = Color.from_rgba8(255, 0, 0, 80)
+var debug_color: Color = Color.from_rgba8(255, 255, 0, 150)
+
+func request_fov_update() -> void:
+	if _update_scheduled:
+		return
+	_update_scheduled = true
+	call_deferred("schedule_fov_update")
+
+func schedule_fov_update() -> void:
+	await get_tree().physics_frame
+	_update_scheduled = false
+	if _needs_update or _first_tick:
+		_first_tick = false
+		_needs_update = false
+		update_fov()
+		update_display()
+		update_fov_polygon()
+
 func _ready() -> void:
 	build_fov()
-	update_fov()
-	update_display()
-	update_fov_polygon()
-
-func _physics_process(dt: float) -> void:
-	update_rotation(dt)
-	update_movement(dt)
-	
-	if !moved:
-		return
-	moved = false
-	
-	update_fov()
-	update_display()
-	update_fov_polygon()
+	request_fov_update()
 
 func update_rotation(dt: float) -> void:
 	var dir := 0.0
 	if Input.is_action_pressed("turn_left"):
 		dir -= 1.0
-		moved = true
+		_moved = true
 	if Input.is_action_pressed("turn_right"):
 		dir += 1.0
-		moved = true
+		_moved = true
 	rotation += deg_to_rad(turn_speed_deg) * dir * dt
+	
 func update_movement(dt: float) -> void:
 	var dir := Vector2.ZERO
 	if Input.is_action_pressed("go_left"):
 		dir.x -= 1.0
-		moved = true
+		_moved = true
 	if Input.is_action_pressed("go_up"):
 		dir.y -= 1.0
-		moved = true
+		_moved = true
 	if Input.is_action_pressed("go_right"):
 		dir.x += 1.0
-		moved = true
+		_moved = true
 	if Input.is_action_pressed("go_down"):
 		dir.y += 1.0
-		moved = true
+		_moved = true
 	dir = dir.normalized()
 	position += dir * speed * dt
 
@@ -92,8 +100,9 @@ func build_fov() -> void:
 
 # Updates logic rays & visual beams
 func update_fov() -> void:
-	rays_root.rotation = deg_to_rad(offset_degrees)
-	beams_root.rotation = deg_to_rad(offset_degrees)
+	var face := global_rotation + deg_to_rad(offset_degrees)
+	rays_root.rotation = face
+	beams_root.rotation = face
 	
 	var count := rays_root.get_child_count()
 	if beams_root.get_child_count() < count:
@@ -136,8 +145,8 @@ func update_display() -> void:
 		var dir := base / base.length()
 		var dist := Vector2(v - global_position).length()
 
-		var from := v + dir * eps
-		var to := from + dir * (reach - dist + eps)
+		var from := v + dir * _eps
+		var to := from + dir * (reach - dist + _eps)
 
 		var query := PhysicsRayQueryParameters2D.create(from, to)
 		query.collision_mask = collision_mask
@@ -178,22 +187,36 @@ func add_limit_beams_to_display() -> void:
 		line.add_point(display_beams_root.to_local(global_position))
 		line.add_point(display_beams_root.to_local(end_global))
 		display_beams_root.add_child(line)
+		
+func get_all_walls() -> Array[Rect2]:
+	var map := get_tree().get_root().find_child("Map", true, false) as TileMap
+	if map == null:
+		return []
+	
+	var walls: Array[Rect2] = []
+	var tile_size := map.tile_set.tile_size
+	
+	for cell in map.get_used_cells(0):  # layer 0 (adapt if needed)
+		var local_pos := map.map_to_local(cell)
+		var global_pos := map.to_global(local_pos)
+		var rect := Rect2(global_pos, tile_size)
+		walls.push_back(rect)
+	
+	return walls
 
 # Returns all vertices in the fov of the turret
 func get_seen_vertices() -> PackedVector2Array:
 	
 	# Get all vertices
 	var candidates := PackedVector2Array()
-	var wall_parent = get_tree().get_first_node_in_group("WallsGroup")
-	if wall_parent:
-		for wall in get_tree().get_first_node_in_group("WallsGroup").get_children():
-			var rect := wall.get_child(0) as ColorRect
-			var p := rect.global_position
-			var s := rect.size
-			candidates.push_back(p)
-			candidates.push_back(Vector2(p.x + s.x, p.y))
-			candidates.push_back(Vector2(p.x + s.x, p.y + s.y))
-			candidates.push_back(Vector2(p.x, p.y + s.y))
+	var walls_root = get_all_walls()
+	for wall in walls_root:
+		var p := wall["position"] as Vector2
+		var s := wall["size"] as Vector2
+		candidates.push_back(p)
+		candidates.push_back(Vector2(p.x + s.x, p.y))
+		candidates.push_back(Vector2(p.x + s.x, p.y + s.y))
+		candidates.push_back(Vector2(p.x, p.y + s.y))
 	
 	# Check if seen
 	var out := PackedVector2Array()
@@ -225,19 +248,19 @@ func vertex_blocked(v: Vector2) -> bool:
 	var space := get_world_2d().direct_space_state
 
 	# Before
-	var q1 := PhysicsRayQueryParameters2D.create(global_position, v + dir * eps)
+	var q1 := PhysicsRayQueryParameters2D.create(global_position, v + dir * _eps)
 	q1.collision_mask = collision_mask
 	q1.hit_from_inside = false
 
 	var hit1 := space.intersect_ray(q1)
 	if hit1.has("position"):
 		var d1 := global_position.distance_to(hit1.position)
-		if d1 + eps < dist:
+		if d1 + _eps < dist:
 			return true
 
 	# After
-	var from2 := v + dir * eps
-	var to2   := from2 + dir * eps
+	var from2 := v + dir * _eps
+	var to2   := from2 + dir * _eps
 	var q2 := PhysicsRayQueryParameters2D.create(from2, to2)
 	q2.collision_mask = collision_mask
 	q2.hit_from_inside = true
@@ -253,11 +276,12 @@ func update_fov_polygon() -> void:
 
 	for child in beams_root.get_children():
 		if child is Line2D and child.get_point_count() >= 2:
-			var p := Vector2(child.get_point_position(1))
-			if p.length_squared() < 1e-6:
+			var p_local := Vector2(child.get_point_position(1))
+			if p_local.length_squared() < 1e-6:
 				continue
-			var ang := p.angle()
-			pts.append({ "ang": ang, "p": p })
+			var p_world := beams_root.to_global(p_local)
+			var ang := (p_world - global_position).angle()
+			pts.append({ "ang": ang, "p_world": p_world })
 
 	if pts.size() < 2:
 		fov_polygon.polygon = PackedVector2Array()
@@ -272,16 +296,19 @@ func update_fov_polygon() -> void:
 		else:
 			var last = filtered[filtered.size() - 1]
 			if abs(wrapf(e.ang - last.ang, -PI, PI)) < 0.0005:
-				# keep the farther endpoint
-				if e.p.length_squared() > last.p.length_squared():
+				# keep the farther endpoint from the turret
+				var e_len := (e.p_world - global_position).length_squared() as float
+				var l_len := (last.p_world - global_position).length_squared() as float
+				if e_len > l_len:
 					filtered[filtered.size() - 1] = e
 			else:
 				filtered.append(e)
 
 	var poly := PackedVector2Array()
-	poly.push_back(Vector2.ZERO)
+	# Anchor at the turret (in the polygon node’s local space)
+	poly.push_back(fov_polygon.to_local(global_position))
 	for e in filtered:
-		poly.push_back(e.p)
+		poly.push_back(fov_polygon.to_local(e.p_world))
 
 	fov_polygon.polygon = poly
 	fov_polygon.color = polygon_color

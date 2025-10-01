@@ -30,29 +30,29 @@ func _ready() -> void:
 		_ring.visible = true
 		if _ring.has_method("set_value"):
 			_ring.call("set_value", 0.0)
+			
+func _physics_process(delta: float) -> void:
+	if _dashing:
+		dash_step(delta)
+	elif _touching: # kann einen Sprung nur aufladen wenn der Player sich nicht bewegt
+		check_for_charge(delta)
+	else:
+		pass
 		
-func _show_ring():
+func show_ring():
 	if _ring:
 		_ring.visible = true
 
-func _hide_ring():
+func hide_ring():
 	if _ring:
 		if _ring.has_method("set_value"):
 			_ring.call("set_value", 0.0)
 
-func _update_ring(t: float):
+func update_ring(t: float):
 	if _ring and _ring.has_method("set_value"):
 		_ring.call("set_value", t)  # t = 0..1
-
-func _physics_process(delta: float) -> void:
-	if _dashing:
-		_dash_step(delta)
-	elif _touching: # kann einen Sprung nur aufladen wenn der Player sich nicht bewegt
-		_check_for_charge(delta)
-	else:
-		pass
 	
-func _apply_dash() -> void:
+func apply_dash() -> void:
 	var t: float = _charge_elapsed / max(charge_time, 0.0001)  # 0..1
 	var jump_dir: Vector2 = (global_position - get_child(3).global_position).normalized()
 	var eased := t * t  # weiche Kurve; ersetze durch t für linear
@@ -61,86 +61,87 @@ func _apply_dash() -> void:
 	_charging = false
 	_dashing = true
 	
-func _check_for_charge(delta: float) -> void:
+func check_for_charge(delta: float) -> void:
 	if Input.is_action_just_pressed("jump"):
 		_charging = true
 		_charge_elapsed = 0.0
-		_show_ring()
+		show_ring()
 
 	# Aufladen solange Space gehalten wird
 	if _charging and Input.is_action_pressed("jump"):
 		_charge_elapsed = min(_charge_elapsed + delta, charge_time)
 		var t: float = _charge_elapsed / max(charge_time, 0.0001)
-		_update_ring(t)
+		update_ring(t)
 
 	# Bei Release: Sprung auslösen
 	if _charging and Input.is_action_just_released("jump"):
-		_apply_dash()
+		apply_dash()
 		_charging = false
-		_hide_ring()
+		hide_ring()
 	
 	
-func _dash_step(delta: float) -> void:
+func dash_step(delta: float) -> void:
 	var motion := velocity * delta
 	var collision = move_and_collide(motion)
-	print("moving")
-	print(collision)
-	if collision:
-		var collider := collision.get_collider()
-		var n := collision.get_normal().normalized()
-		print(collider, " is ", collider.get_class())
-		var tilemap = collider as TileMap
-		if tilemap:
-			print(tilemap)
-			print("Name:", tilemap.name) 
-			var coords = tilemap.local_to_map(collision.get_position())
-			print(coords)
-			var source_id = tilemap.get_cell_source_id(0, coords)
-			if source_id == -1:
-				_touching = true
-				_dashing = false
-				return
-			print(source_id)
-			var atlas_coords = tilemap.get_cell_atlas_coords(0, coords) # for tiles in atlases
-			var alternative = tilemap.get_cell_alternative_tile(0, coords)
-			var data = tilemap.tile_set.get_source(source_id).get_tile_data(atlas_coords, alternative)
-			if data:
-				var tile_type = data.get_custom_data("wall_type")
-				print("Tile type:", tile_type)
-				print("Custom data:", data)
-				match tile_type:
-					"sticky":
-						print("sticking")
-						velocity = Vector2.ZERO
-						_touching = true
-						_dashing = false
-						return
-					"bouncy":
-						print("bouncing")
-						# Verhalten 2) Abprallen: v' = v.bounce(n) * koeff
-						velocity = velocity.bounce(n) * bounce_coeff
-						if velocity.length() < min_speed_after_bounce:
-							# Schutz gegen „steckenbleiben“: entweder stoppen oder Mindest-Tempo
-							_dashing = false
-							_touching = true
-							velocity = Vector2.ZERO
-							# Restbewegung im selben Frame optional weglassen → nächste Physik-Iteration macht weiter
-						return
-					"sliding":
-						print("slinding")
-						# Verhalten 3) Entlang gleiten: v' = v.slide(n)
-						velocity = velocity.slide(n) * slide_keep_ratio
-						if velocity.length() < min_speed_after_bounce:
-							_dashing = false
-							_touching = true
-							velocity = Vector2.ZERO
-						return
-					"default":
-						_dashing = false
-						_touching = true
-	else:
-		# Verhalten bei keiner kollision
+	
+	if !collision:
 		velocity = velocity.move_toward(Vector2.ZERO, dash_decay * delta) + gravity_vector * delta
 		if velocity.length() < 1.0:
 			_dashing = false
 			velocity = Vector2.ZERO
+		return
+		
+	var collider := collision.get_collider()
+	var n := collision.get_normal().normalized()
+	
+	print(collider, " is ", collider.get_class())
+	
+	var tilemap = collider as TileMap
+	if tilemap:
+		print(tilemap)
+		print("Name:", tilemap.name) 
+		var coords = tilemap.local_to_map(tilemap.to_local(collision.get_position()))
+		print(coords)
+		var source_id = tilemap.get_cell_source_id(0, coords)
+		if source_id == -1:
+			_touching = true
+			_dashing = false
+			return
+		print(source_id)
+		var atlas_coords = tilemap.get_cell_atlas_coords(0, coords) # for tiles in atlases
+		var alternative = tilemap.get_cell_alternative_tile(0, coords)
+		var data = tilemap.tile_set.get_source(source_id).get_tile_data(atlas_coords, alternative)
+		if data:
+			var tile_type = data.get_custom_data("wall_type")
+			print("Tile type:", tile_type)
+			print("Custom data:", data)
+			match tile_type:
+				"sticky":
+					print("sticking")
+					velocity = Vector2.ZERO
+					_touching = true
+					_dashing = false
+					return
+				"bouncy":
+					print("bouncing")
+					# Verhalten 2) Abprallen: v' = v.bounce(n) * koeff
+					velocity = velocity.bounce(n) * bounce_coeff
+					if velocity.length() < min_speed_after_bounce:
+						# Schutz gegen „steckenbleiben“: entweder stoppen oder Mindest-Tempo
+						_dashing = false
+						_touching = true
+						velocity = Vector2.ZERO
+						# Restbewegung im selben Frame optional weglassen → nächste Physik-Iteration macht weiter
+					return
+				"sliding":
+					print("slinding")
+					# Verhalten 3) Entlang gleiten: v' = v.slide(n)
+					velocity = velocity.slide(n) * slide_keep_ratio
+					if velocity.length() < min_speed_after_bounce:
+						_dashing = false
+						_touching = true
+						velocity = Vector2.ZERO
+					return
+				"default":
+					_dashing = false
+					_touching = true
