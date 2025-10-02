@@ -125,21 +125,26 @@ func update_fov() -> void:
 
 # Updates timer depending on if the player is seen
 func update_detection(seen: bool) -> void:
+	var p := get_tree().get_nodes_in_group("player")[0]
+	
 	if seen:
 		if !seeing_player:
-			seeing_player = true
+			if p and p.has_method("entered_turret_fov"):
+				p.call_deferred("entered_turret_fov")
+			seeing_player = true	
 			detect_timer.stop()
 			detect_timer.start()
 	else:
-		seeing_player = false
-		detect_timer.stop()
+		if seeing_player:
+			seeing_player = false
+			if p and p.has_method("exited_turret_fov"):
+				p.call_deferred("exited_turret_fov")
+			detect_timer.stop()
 
 func on_detect_timer_timeout() -> void:
 	if !seeing_player:
 		return
-	for p in get_tree().get_nodes_in_group("player"):
-		if p.has_method("die"):
-			p.call_deferred("die")
+	get_tree().get_nodes_in_group("player")[0].call_deferred("die")
 
 func get_all_walls() -> Array[Rect2]:
 	var map := get_tree().get_root().find_child("Map", true, false) as TileMap

@@ -12,12 +12,15 @@ extends CharacterBody2D
 @export var max_jump_speed: float = -600.0
 @export var ring_path: String = "ChargeRing"
 
+@onready var sprite := $AnimatedSprite2D
+
 var _charging: bool = false
 var _dashing: bool = true
 var _charge_elapsed: float = 0.0
 var _on_ice_this_step := false
 var _ice_tangent := Vector2.ZERO
 var _ring: Node2D
+var _turrets_seeing := 0
 
 const EPS := 0.001
 
@@ -37,6 +40,19 @@ var _last_wall_type := WALL_TYPE.Sticky
 # Called by turret when hitting the player
 func die():
 	get_tree().reload_current_scene()
+
+func entered_turret_fov():
+	_turrets_seeing += 1
+	update_spot_color()
+
+func exited_turret_fov():
+	_turrets_seeing = max(0, _turrets_seeing - 1)
+	update_spot_color()
+
+func update_spot_color():
+	sprite.modulate = Color(1,1,1,1)
+	if _turrets_seeing > 0:
+		sprite.modulate = Color(1, 0, 0, 1)
 
 func _ready():
 	add_to_group("player")
