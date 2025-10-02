@@ -5,66 +5,52 @@ extends Node2D
 @export var reach: float = 200.0
 @export var offset_degrees: float = 0.0
 @export_flags_2d_physics var collision_mask := 1
-@export var turn_speed_deg := 120.0
-@export var speed := 300
+
+@export var rotating = false
+@export var rotation_clockwise = true
+@export var rotation_speed := 15.0
+@export var speed := 0
 
 @onready var rays_root: Node2D = $Rays
 @onready var beams_root: Node2D = $Beams
 @onready var fov_polygon: Polygon2D = $FOV
 
-var _needs_update := true
-var _update_scheduled := false
-var _first_tick := true
-var _moved = false
 const EPS := 0.75
 
 var line_color: Color = Color.from_rgba8(255, 255, 255, 150)
 var polygon_color: Color = Color.from_rgba8(255, 0, 0, 80)
 var debug_color: Color = Color.from_rgba8(255, 255, 0, 150)
 
-func request_fov_update() -> void:
-	if _update_scheduled:
-		return
-	_update_scheduled = true
-	call_deferred("schedule_fov_update")
-
-func schedule_fov_update() -> void:
-	await get_tree().physics_frame
-	_update_scheduled = false
-	if _needs_update or _first_tick:
-		_first_tick = false
-		_needs_update = false
-		update_fov()
-		update_fov_polygon()
-
 func _ready() -> void:
+	global_rotation += deg_to_rad(offset_degrees)
 	build_fov()
-	request_fov_update()
+
+func _physics_process(delta: float) -> void:
+	if rotating:
+		update_rotation(delta)
+	update_fov()
+	update_fov_polygon()
 
 func update_rotation(dt: float) -> void:
-	var dir := 0.0
-	if Input.is_action_pressed("turn_left"):
-		dir -= 1.0
-		_moved = true
-	if Input.is_action_pressed("turn_right"):
-		dir += 1.0
-		_moved = true
-	rotation += deg_to_rad(turn_speed_deg) * dir * dt
+	var rotation_direction = 1.0
+	if !rotation_clockwise:
+		rotation_direction = -1.0
+	rotation += deg_to_rad(rotation_speed) * dt * rotation_direction
 	
 func update_movement(dt: float) -> void:
 	var dir := Vector2.ZERO
 	if Input.is_action_pressed("go_left"):
 		dir.x -= 1.0
-		_moved = true
+		#_moved = true
 	if Input.is_action_pressed("go_up"):
 		dir.y -= 1.0
-		_moved = true
+		#_moved = true
 	if Input.is_action_pressed("go_right"):
 		dir.x += 1.0
-		_moved = true
+		#_moved = true
 	if Input.is_action_pressed("go_down"):
 		dir.y += 1.0
-		_moved = true
+		#_moved = true
 	dir = dir.normalized()
 	position += dir * speed * dt
 
@@ -97,9 +83,9 @@ func build_fov() -> void:
 
 # Updates logic rays & visual beams
 func update_fov() -> void:
-	var face := global_rotation + deg_to_rad(offset_degrees)
-	rays_root.rotation = face
-	beams_root.rotation = face
+	var face := global_rotation
+	rays_root.global_rotation = face
+	beams_root.global_rotation = face
 	
 	var count := rays_root.get_child_count()
 	if beams_root.get_child_count() < count:
@@ -202,6 +188,7 @@ func vertex_blocked(v: Vector2) -> bool:
 
 # Updates the fov polygon
 func update_fov_polygon() -> void:
+	var face := global_rotation + deg_to_rad(offset_degrees)
 	var pts := []
 
 	for child in beams_root.get_children():
@@ -210,7 +197,7 @@ func update_fov_polygon() -> void:
 			if p_local.length_squared() < 1e-6:
 				continue
 			var p_world := beams_root.to_global(p_local)
-			var ang := (p_world - global_position).angle()
+			var ang := wrapf((p_world - global_position).angle() - face, -PI, PI)
 			pts.append({ "ang": ang, "p_world": p_world })
 
 	if pts.size() < 2:
