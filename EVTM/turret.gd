@@ -5,7 +5,7 @@ extends Node2D
 @export var reach: float = 200.0
 @export var offset_degrees: float = 0.0
 @export_flags_2d_physics var collision_mask := 1
-@export var lock_time: float = 1.25
+@export var lock_time: float = 0.5
 
 @export var rotating = false
 @export var rotation_clockwise = true

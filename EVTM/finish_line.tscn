@@ -60,4 +60,9 @@ debug_color = Color(0.10222646, 0.5881161, 0.74674296, 0.41960785)
 sprite_frames = SubResource("SpriteFrames_jviou")
 frame_progress = 0.9434071
 
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
+
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
