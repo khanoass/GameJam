@@ -19,3 +19,5 @@ offset_top = -8.0
 offset_right = 8.0
 offset_bottom = 8.0
 color = Color(0.20364204, 0.4203241, 1, 1)
+
+[node name="DetectTimer" type="Timer" parent="."]

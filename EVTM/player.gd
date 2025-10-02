@@ -34,6 +34,10 @@ const WALLS := {
 }
 var _last_wall_type := WALL_TYPE.Sticky
 
+# Called by turret when hitting the player
+func die():
+	get_tree().reload_current_scene()
+
 func _ready():
 	add_to_group("player")
 	_ring = get_node_or_null(ring_path)

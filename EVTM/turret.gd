@@ -5,15 +5,18 @@ extends Node2D
 @export var reach: float = 200.0
 @export var offset_degrees: float = 0.0
 @export_flags_2d_physics var collision_mask := 1
+@export var lock_time: float = 1.25
 
 @export var rotating = false
 @export var rotation_clockwise = true
 @export var rotation_speed := 15.0
 @export var speed := 0
 
+
 @onready var rays_root: Node2D = $Rays
 @onready var beams_root: Node2D = $Beams
 @onready var fov_polygon: Polygon2D = $FOV
+@onready var detect_timer: Timer = $DetectTimer
 
 const EPS := 0.75
 
@@ -21,9 +24,16 @@ var line_color: Color = Color.from_rgba8(255, 255, 255, 150)
 var polygon_color: Color = Color.from_rgba8(255, 0, 0, 80)
 var debug_color: Color = Color.from_rgba8(255, 255, 0, 150)
 
+var seeing_player := false
+
 func _ready() -> void:
 	global_rotation += deg_to_rad(offset_degrees)
 	build_fov()
+	
+	detect_timer.one_shot = true
+	detect_timer.wait_time = lock_time
+	if !detect_timer.timeout.is_connected(on_detect_timer_timeout):
+		detect_timer.timeout.connect(on_detect_timer_timeout)
 
 func _physics_process(delta: float) -> void:
 	if rotating:
@@ -90,7 +100,8 @@ func update_fov() -> void:
 	var count := rays_root.get_child_count()
 	if beams_root.get_child_count() < count:
 		count = beams_root.get_child_count()
-		
+	
+	var player_hit := false
 	for i in count:
 		var rc := rays_root.get_child(i) as RayCast2D
 		var line := beams_root.get_child(i) as Line2D
@@ -99,10 +110,36 @@ func update_fov() -> void:
 		var end_global := rc.to_global(rc.target_position)
 		if rc.is_colliding():
 			end_global = rc.get_collision_point()
+			
+			# Player hit
+			var col := rc.get_collider()
+			if col is Node && col.is_in_group("player"):
+				player_hit = true
+			
 		var end_local := beams_root.to_local(end_global)
 
 		line.set_point_position(0, Vector2.ZERO)
 		line.set_point_position(1, end_local)
+		
+	update_detection(player_hit)
+
+# Updates timer depending on if the player is seen
+func update_detection(seen: bool) -> void:
+	if seen:
+		if !seeing_player:
+			seeing_player = true
+			detect_timer.stop()
+			detect_timer.start()
+	else:
+		seeing_player = false
+		detect_timer.stop()
+
+func on_detect_timer_timeout() -> void:
+	if !seeing_player:
+		return
+	for p in get_tree().get_nodes_in_group("player"):
+		if p.has_method("die"):
+			p.call_deferred("die")
 
 func get_all_walls() -> Array[Rect2]:
 	var map := get_tree().get_root().find_child("Map", true, false) as TileMap
@@ -213,7 +250,6 @@ func update_fov_polygon() -> void:
 		else:
 			var last = filtered[filtered.size() - 1]
 			if abs(wrapf(e.ang - last.ang, -PI, PI)) < 0.0005:
-				# keep the farther endpoint from the turret
 				var e_len := (e.p_world - global_position).length_squared() as float
 				var l_len := (last.p_world - global_position).length_squared() as float
 				if e_len > l_len:
@@ -222,7 +258,6 @@ func update_fov_polygon() -> void:
 				filtered.append(e)
 
 	var poly := PackedVector2Array()
-	# Anchor at the turret (in the polygon node’s local space)
 	poly.push_back(fov_polygon.to_local(global_position))
 	for e in filtered:
 		poly.push_back(fov_polygon.to_local(e.p_world))
