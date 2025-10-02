@@ -25,14 +25,13 @@ offset_degrees = 22.0
 [node name="End Turret" parent="." instance=ExtResource("4_u016g")]
 position = Vector2(572, -723)
 arc_degrees = 30.0
-reach = 500.0
+reach = 300.0
 rotating = true
 rotation_speed = 20.0
 
 [node name="End Turret Anti" parent="." instance=ExtResource("4_u016g")]
 position = Vector2(822, -725)
 arc_degrees = 30.0
-reach = 500.0
 offset_degrees = 60.0
 rotating = true
 rotation_clockwise = false
