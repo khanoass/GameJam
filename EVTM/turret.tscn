@@ -13,8 +13,6 @@ visible = false
 
 [node name="FOV" type="Polygon2D" parent="."]
 
-[node name="DisplayBeams" type="Node2D" parent="."]
-
 [node name="ColorRect" type="ColorRect" parent="."]
 offset_left = -8.0
 offset_top = -8.0

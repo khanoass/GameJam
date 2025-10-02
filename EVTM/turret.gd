@@ -4,21 +4,19 @@ extends Node2D
 @export var ray_density: float = 2.0
 @export var reach: float = 200.0
 @export var offset_degrees: float = 0.0
-@export var line_width: float = 2.0
 @export_flags_2d_physics var collision_mask := 1
 @export var turn_speed_deg := 120.0
 @export var speed := 300
 
 @onready var rays_root: Node2D = $Rays
 @onready var beams_root: Node2D = $Beams
-@onready var display_beams_root: Node2D = $DisplayBeams
 @onready var fov_polygon: Polygon2D = $FOV
 
 var _needs_update := true
 var _update_scheduled := false
 var _first_tick := true
 var _moved = false
-var _eps := 0.75
+const EPS := 0.75
 
 var line_color: Color = Color.from_rgba8(255, 255, 255, 150)
 var polygon_color: Color = Color.from_rgba8(255, 0, 0, 80)
@@ -37,7 +35,6 @@ func schedule_fov_update() -> void:
 		_first_tick = false
 		_needs_update = false
 		update_fov()
-		update_display()
 		update_fov_polygon()
 
 func _ready() -> void:
@@ -90,9 +87,9 @@ func build_fov() -> void:
 		rc.enabled = true
 		rays_root.add_child(rc)
 
-		# Visual
+		# Debug visuals
 		var line := Line2D.new()
-		line.width = line_width
+		line.width = 1
 		line.default_color = debug_color
 		line.add_point(Vector2.ZERO)
 		line.add_point(Vector2.ZERO)
@@ -121,73 +118,6 @@ func update_fov() -> void:
 		line.set_point_position(0, Vector2.ZERO)
 		line.set_point_position(1, end_local)
 
-# Builds and updates minimal visual beams
-func update_display() -> void:
-	
-	# Cleanup
-	for child in display_beams_root.get_children():
-		child.queue_free()
-
-	add_limit_beams_to_display()
-
-	var seen_vertices := get_seen_vertices()
-	var cast_vertices := PackedVector2Array()
-
-	for v in seen_vertices:
-		if !vertex_blocked(v):
-			cast_vertices.push_back(v)
-
-	# Cast a shadow edge from each vertex out to the arc limit
-	for v in cast_vertices:
-		var base := v - global_position
-		if base.length() < 1e-3:
-			continue
-		var dir := base / base.length()
-		var dist := Vector2(v - global_position).length()
-
-		var from := v + dir * _eps
-		var to := from + dir * (reach - dist + _eps)
-
-		var query := PhysicsRayQueryParameters2D.create(from, to)
-		query.collision_mask = collision_mask
-		query.hit_from_inside = false
-
-		var hit := get_world_2d().direct_space_state.intersect_ray(query)
-		var end_global := to
-		if hit.has("position"):
-			end_global = hit.position
-
-		var line := Line2D.new()
-		line.width = line_width
-		line.default_color = line_color
-		line.add_point(display_beams_root.to_local(v))
-		line.add_point(display_beams_root.to_local(end_global))
-		display_beams_root.add_child(line)
-
-# Left/right FOV limit beams
-func add_limit_beams_to_display() -> void:
-	var facing := global_rotation + deg_to_rad(offset_degrees)
-	var half_arc := deg_to_rad(arc_degrees * 0.5)
-
-	for side in [-1, 1]:
-		var ang := facing + half_arc * float(side)
-		var max_end := global_position + Vector2.RIGHT.rotated(ang) * reach
-
-		var query := PhysicsRayQueryParameters2D.create(global_position, max_end)
-		query.collision_mask = collision_mask
-
-		var hit := get_world_2d().direct_space_state.intersect_ray(query)
-		var end_global := max_end
-		if hit.has("position"):
-			end_global = hit.position
-
-		var line := Line2D.new()
-		line.width = line_width
-		line.default_color = line_color
-		line.add_point(display_beams_root.to_local(global_position))
-		line.add_point(display_beams_root.to_local(end_global))
-		display_beams_root.add_child(line)
-		
 func get_all_walls() -> Array[Rect2]:
 	var map := get_tree().get_root().find_child("Map", true, false) as TileMap
 	if map == null:
@@ -248,19 +178,19 @@ func vertex_blocked(v: Vector2) -> bool:
 	var space := get_world_2d().direct_space_state
 
 	# Before
-	var q1 := PhysicsRayQueryParameters2D.create(global_position, v + dir * _eps)
+	var q1 := PhysicsRayQueryParameters2D.create(global_position, v + dir * EPS)
 	q1.collision_mask = collision_mask
 	q1.hit_from_inside = false
 
 	var hit1 := space.intersect_ray(q1)
 	if hit1.has("position"):
 		var d1 := global_position.distance_to(hit1.position)
-		if d1 + _eps < dist:
+		if d1 + EPS < dist:
 			return true
 
 	# After
-	var from2 := v + dir * _eps
-	var to2   := from2 + dir * _eps
+	var from2 := v + dir * EPS
+	var to2   := from2 + dir * EPS
 	var q2 := PhysicsRayQueryParameters2D.create(from2, to2)
 	q2.collision_mask = collision_mask
 	q2.hit_from_inside = true

@@ -10,7 +10,7 @@ func _physics_process(delta: float) -> void:
 	var player_pos = player.global_position
 	var mouse_pos = get_global_mouse_position()
 	
-	# compute the difference between the two and where on that vector the arrow is
+	# compute the difference between the two and where the arrow is on that vector 
 	var offset = (player_pos - mouse_pos).normalized()
 	
 	# updated the position and rotation of the arrow

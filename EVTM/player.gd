@@ -1,29 +1,40 @@
 extends CharacterBody2D
 
-# Physische Gegebenheiten
-@export var gravity: float = 1200           # Erdanziehungskraft
-@export var gravity_vector: Vector2 = Vector2(0, gravity) # ... als Vektor
-@export var dash_decay := 2.0               # Luftwiderstand bzw. Geschwindigkeitsabfall pro Sekunde
-@export var bounce_coeff := 0.9             # 0..1 (Energieerhalt beim Abprallen)
+@export var gravity: float = 1200
+@export var gravity_vector: Vector2 = Vector2(0, gravity)
+@export var dash_decay := 2.0
+@export var bounce_coeff := 0.9
 @export var min_speed_after_bounce := 60.0
-@export var slide_keep_ratio := 0.85        # 0..1 (wie viel Speed beim Sliden erhalten bleibt)
+@export var slide_keep_ratio := 0.85
+@export var slide_decay := 0.0
+@export var charge_time: float = 0.8
+@export var min_jump_speed: float = -300.0
+@export var max_jump_speed: float = -600.0
+@export var ring_path: String = "ChargeRing"
 
-# Spielereigenschaften
-@export var charge_time: float = 0.8         # Sekunden bis zur Maximal-Ladung
-@export var min_jump_speed: float = -300.0   # kleine Sprunghöhe (negativ = nach oben)
-@export var max_jump_speed: float = -600.0   # maximale Sprunghöhe (stärker negativ)
-
-# ... Annahme, dass im ersten Frame der Spieler noch in der Luft ist und runterfällt
 var _charging: bool = false
 var _dashing: bool = true
-var _touching: bool = false
 var _charge_elapsed: float = 0.0
-
-# UI Elemente für den Spieler initialisieren
-@export var ring_path: String = "ChargeRing"   # zeigt auf dein Player/ChargeRing
+var _on_ice_this_step := false
+var _ice_tangent := Vector2.ZERO
 var _ring: Node2D
 
-func _ready() -> void:
+const EPS := 0.001
+
+enum WALL_TYPE {
+	Sticky,
+	Bouncy,
+	Sliding
+}
+
+const WALLS := {
+	"sticky": WALL_TYPE.Sticky,
+	"bouncy": WALL_TYPE.Bouncy,
+	"sliding": WALL_TYPE.Sliding
+}
+var _last_wall_type := WALL_TYPE.Sticky
+
+func _ready():
 	add_to_group("player")
 	_ring = get_node_or_null(ring_path)
 	if _ring:
@@ -31,13 +42,11 @@ func _ready() -> void:
 		if _ring.has_method("set_value"):
 			_ring.call("set_value", 0.0)
 			
-func _physics_process(delta: float) -> void:
+func _physics_process(delta: float):
 	if _dashing:
 		dash_step(delta)
-	elif _touching: # kann einen Sprung nur aufladen wenn der Player sich nicht bewegt
-		check_for_charge(delta)
-	else:
-		pass
+		return
+	check_for_charge(delta)
 		
 func show_ring():
 	if _ring:
@@ -52,7 +61,7 @@ func update_ring(t: float):
 	if _ring and _ring.has_method("set_value"):
 		_ring.call("set_value", t)  # t = 0..1
 	
-func apply_dash() -> void:
+func apply_dash():
 	var t: float = _charge_elapsed / max(charge_time, 0.0001)  # 0..1
 	var jump_dir: Vector2 = (global_position - get_child(3).global_position).normalized()
 	var eased := t * t  # weiche Kurve; ersetze durch t für linear
@@ -61,7 +70,7 @@ func apply_dash() -> void:
 	_charging = false
 	_dashing = true
 	
-func check_for_charge(delta: float) -> void:
+func check_for_charge(delta: float):
 	if Input.is_action_just_pressed("jump"):
 		_charging = true
 		_charge_elapsed = 0.0
@@ -79,69 +88,149 @@ func check_for_charge(delta: float) -> void:
 		_charging = false
 		hide_ring()
 	
+func dash_step(delta: float):
+	velocity += gravity_vector * delta
+
+	var remaining := velocity * delta
+	var max_iters := 8
+	var max_step := 16.0
+
+	_on_ice_this_step = false
+	_ice_tangent = Vector2.ZERO
+
+	while max_iters > 0 and remaining.length() > EPS:
+		var step := remaining
+		if step.length() > max_step:
+			step = step.normalized() * max_step
+
+		var collision := move_and_collide(step, false, 0.08, true)
+		if collision == null:
+			remaining -= step
+			max_iters -= 1
+			continue
+
+		var n := collision.get_normal().normalized()
+		var r := collision.get_remainder()
+		var is_recovery := r.is_zero_approx() and collision.get_travel().is_zero_approx()
+
+		if is_recovery:
+			remaining = r
+			max_iters -= 1
+			continue
+
+		var type := get_tile_type(collision, n)
+		_last_wall_type = type
+
+		var cont := update_wall_collision(type, n, r)
+
+		if (cont - remaining).length() < EPS:
+			remaining = Vector2.ZERO
+			break
+
+		remaining = cont
+		max_iters -= 1
+
+	if _on_ice_this_step and _ice_tangent != Vector2.ZERO:
+		var t := _ice_tangent.normalized()
+		var v_t := velocity.project(t)
+		var v_n := velocity - v_t
+		v_t = v_t.move_toward(Vector2.ZERO, slide_decay * delta)
+		v_n = v_n.move_toward(Vector2.ZERO, dash_decay * delta)
+		velocity = v_t + v_n
+	else:
+		velocity = velocity.move_toward(Vector2.ZERO, dash_decay * delta)
+
+	if velocity.length() < 1.0:
+		_dashing = false
+		velocity = Vector2.ZERO
+
+func get_tile_type(collision: KinematicCollision2D, normal: Vector2) -> WALL_TYPE:
+	var tmap := collision.get_collider() as TileMap
+	var def := _last_wall_type
+	if tmap == null:
+		return def
+
+	var layer := 0
+	var probe := collision.get_position() - normal * 0.25
+	var coords := tmap.local_to_map(tmap.to_local(probe))
+	var src := tmap.get_cell_source_id(layer, coords)
+	if src == -1:
+		return def
+
+	var ac := tmap.get_cell_atlas_coords(layer, coords)
+	var alt := tmap.get_cell_alternative_tile(layer, coords)
+	var data := tmap.tile_set.get_source(src).get_tile_data(ac, alt) as TileData
+	if data == null:
+		return def
+
+	var tt = data.get_custom_data("wall_type")
+	if tt is String and WALLS.has(tt):
+		return WALLS[tt]
+
+	return def
+
+func update_wall_collision(type: WALL_TYPE, normal, remainder) -> Vector2:
+	var wall_dispatch := {
+		WALL_TYPE.Sticky: Callable(self, "update_sticky"),
+		WALL_TYPE.Bouncy: Callable(self, "update_bouncy").bind(normal, remainder),
+		WALL_TYPE.Sliding: Callable(self, "update_sliding").bind(normal, remainder),
+	}
+	return wall_dispatch.get(type).call()
+
+func update_sticky() -> Vector2:
+	velocity = Vector2.ZERO
+	_dashing = false
+	return Vector2.ZERO
+
+func update_bouncy(n, r) -> Vector2:
+	velocity = velocity.bounce(n) * bounce_coeff
+	if velocity.length() >= min_speed_after_bounce:
+		return Vector2.ZERO
 	
-func dash_step(delta: float) -> void:
-	var motion := velocity * delta
-	var collision = move_and_collide(motion)
+	_dashing = false
+	velocity = Vector2.ZERO
+	return r.bounce(n)
 	
-	if !collision:
-		velocity = velocity.move_toward(Vector2.ZERO, dash_decay * delta) + gravity_vector * delta
-		if velocity.length() < 1.0:
-			_dashing = false
-			velocity = Vector2.ZERO
-		return
-		
-	var collider := collision.get_collider()
-	var n := collision.get_normal().normalized()
-	
-	print(collider, " is ", collider.get_class())
-	
-	var tilemap = collider as TileMap
-	if tilemap:
-		print(tilemap)
-		print("Name:", tilemap.name) 
-		var coords = tilemap.local_to_map(tilemap.to_local(collision.get_position()))
-		print(coords)
-		var source_id = tilemap.get_cell_source_id(0, coords)
-		if source_id == -1:
-			_touching = true
-			_dashing = false
-			return
-		print(source_id)
-		var atlas_coords = tilemap.get_cell_atlas_coords(0, coords) # for tiles in atlases
-		var alternative = tilemap.get_cell_alternative_tile(0, coords)
-		var data = tilemap.tile_set.get_source(source_id).get_tile_data(atlas_coords, alternative)
-		if data:
-			var tile_type = data.get_custom_data("wall_type")
-			print("Tile type:", tile_type)
-			print("Custom data:", data)
-			match tile_type:
-				"sticky":
-					print("sticking")
-					velocity = Vector2.ZERO
-					_touching = true
-					_dashing = false
-					return
-				"bouncy":
-					print("bouncing")
-					# Verhalten 2) Abprallen: v' = v.bounce(n) * koeff
-					velocity = velocity.bounce(n) * bounce_coeff
-					if velocity.length() < min_speed_after_bounce:
-						# Schutz gegen „steckenbleiben“: entweder stoppen oder Mindest-Tempo
-						_dashing = false
-						_touching = true
-						velocity = Vector2.ZERO
-						# Restbewegung im selben Frame optional weglassen → nächste Physik-Iteration macht weiter
-					return
-				"sliding":
-					print("slinding")
-					# Verhalten 3) Entlang gleiten: v' = v.slide(n)
-					velocity = velocity.slide(n) * slide_keep_ratio
-					if velocity.length() < min_speed_after_bounce:
-						_dashing = false
-						_touching = true
-						velocity = Vector2.ZERO
-					return
-				"default":
-					_dashing = false
-					_touching = true
+func update_sliding(n: Vector2, r: Vector2) -> Vector2:
+	var is_floor := n.y < -0.6
+	var is_wall := absf(n.x) > 0.6
+	var is_ceiling := n.y > 0.6
+
+	if is_wall:
+		velocity.x = 0.0
+		var gdir := gravity_vector.normalized()
+		if gravity_vector.length() > 0.0:
+			gdir = Vector2.DOWN
+		return r.project(gdir)
+
+	if is_floor:
+		var tangent := n.orthogonal().normalized()
+		var v_n := velocity.project(n)
+		var v_t := velocity - v_n
+		if v_t.dot(tangent) < 0.0:
+			tangent = -tangent
+
+		var t_speed := v_t.length()
+
+		var min_slide := min_speed_after_bounce * 0.25
+		if t_speed < min_slide and v_t.length() > 0.001:
+			t_speed = min_slide
+
+		velocity = tangent * t_speed
+
+		var r_tangent := r - r.project(n)
+		if r_tangent.is_zero_approx():
+			r_tangent = tangent * 0.001
+
+		_on_ice_this_step = true
+		_ice_tangent = tangent
+		return r_tangent
+
+	if is_ceiling:
+		if velocity.y < 0.0:
+			velocity.y = 0.0
+		return r - r.project(n)
+
+	var fallback_tangent := n.orthogonal().normalized()
+	velocity = velocity.project(fallback_tangent)
+	return r - r.project(n)
