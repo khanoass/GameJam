@@ -1,9 +1,9 @@
 [gd_scene load_steps=5 format=3 uid="uid://eefrahvu6g37"]
 
-[ext_resource type="PackedScene" uid="uid://bnqh10gubjlg2" path="res://player.tscn" id="1_3hls8"]
-[ext_resource type="TileSet" uid="uid://d2upg53hfj06h" path="res://level_tiles.tres" id="2_hbghi"]
-[ext_resource type="PackedScene" uid="uid://cn2shtf45floc" path="res://turret.tscn" id="3_hn12h"]
-[ext_resource type="PackedScene" uid="uid://by1ayyd5ve4o4" path="res://finish_line.tscn" id="4_ihfcg"]
+[ext_resource type="PackedScene" uid="uid://bnqh10gubjlg2" path="res://Objects/player.tscn" id="1_3hls8"]
+[ext_resource type="TileSet" uid="uid://d2upg53hfj06h" path="res://Textures/level_tiles.tres" id="2_hbghi"]
+[ext_resource type="PackedScene" uid="uid://cn2shtf45floc" path="res://Objects/turret.tscn" id="3_hn12h"]
+[ext_resource type="PackedScene" uid="uid://by1ayyd5ve4o4" path="res://Objects/finish_line.tscn" id="4_ihfcg"]
 
 [node name="Level" type="Node2D"]
 

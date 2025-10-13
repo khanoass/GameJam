@@ -1,9 +1,9 @@
 [gd_scene load_steps=9 format=3 uid="uid://bnqh10gubjlg2"]
 
-[ext_resource type="Script" uid="uid://dxe4apgyly64d" path="res://player.gd" id="1_4flbx"]
-[ext_resource type="Texture2D" uid="uid://b6hpkore075y8" path="res://mario.png" id="2_onrkg"]
-[ext_resource type="Script" uid="uid://cfvtau4ynpoou" path="res://polygon_2d.gd" id="3_i3pqv"]
-[ext_resource type="Script" uid="uid://dgljan0xnve7v" path="res://charge_ring.gd" id="4_hqtel"]
+[ext_resource type="Script" uid="uid://dxe4apgyly64d" path="res://Scripts/player.gd" id="1_4flbx"]
+[ext_resource type="Texture2D" uid="uid://b6hpkore075y8" path="res://Textures/mario.png" id="2_onrkg"]
+[ext_resource type="Script" uid="uid://cfvtau4ynpoou" path="res://Scripts/polygon_2d.gd" id="3_i3pqv"]
+[ext_resource type="Script" uid="uid://dgljan0xnve7v" path="res://Scripts/charge_ring.gd" id="4_hqtel"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_sh265"]
 size = Vector2(12, 16)
@@ -30,7 +30,7 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="player" type="CharacterBody2D"]
+[node name="player" type="CharacterBody2D" groups=["player"]]
 script = ExtResource("1_4flbx")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

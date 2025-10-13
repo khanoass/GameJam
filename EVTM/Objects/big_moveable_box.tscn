@@ -1,0 +1,23 @@
+[gd_scene load_steps=5 format=3 uid="uid://cih2i1h70d3if"]
+
+[ext_resource type="Script" uid="uid://hens2tqk31kj" path="res://Scripts/big_moveable_box.gd" id="1_xdpbq"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_dw6do"]
+size = Vector2(32, 32)
+
+[sub_resource type="QuadMesh" id="QuadMesh_1cohj"]
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_i47s5"]
+
+[node name="BigMoveableBox" type="RigidBody2D"]
+light_mask = 2
+visibility_layer = 2
+script = ExtResource("1_xdpbq")
+
+[node name="BigBox_HitBox" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_dw6do")
+
+[node name="BigBox_Texture" type="MeshInstance2D" parent="."]
+scale = Vector2(32, 32)
+mesh = SubResource("QuadMesh_1cohj")
+texture = SubResource("PlaceholderTexture2D_i47s5")

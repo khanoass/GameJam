@@ -1,7 +1,8 @@
 [gd_scene load_steps=10 format=3 uid="uid://by1ayyd5ve4o4"]
 
-[ext_resource type="Texture2D" uid="uid://ttefsbekl2vh" path="res://flag animation.png" id="1_6tsjx"]
-[ext_resource type="Script" uid="uid://dcraspt50gcy5" path="res://finish_line.gd" id="1_yfpjd"]
+[ext_resource type="Texture2D" uid="uid://ttefsbekl2vh" path="res://Textures/flag animation.png" id="1_6tsjx"]
+[ext_resource type="Script" uid="uid://dcraspt50gcy5" path="res://Scripts/finish_line.gd" id="1_yfpjd"]
+
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_yfpjd"]
 size = Vector2(60, 60)

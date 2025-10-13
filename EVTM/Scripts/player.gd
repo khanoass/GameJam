@@ -24,6 +24,14 @@ var _turrets_seeing := 0
 
 const EPS := 0.001
 
+enum OBJECT_TYPE {
+	PLAYER,
+	MOVEABLE,
+	INTERACTABLE
+}
+
+var object_type: OBJECT_TYPE = OBJECT_TYPE.PLAYER
+
 enum WALL_TYPE {
 	Sticky,
 	Bouncy,
@@ -53,6 +61,9 @@ func update_spot_color():
 	sprite.modulate = Color(1,1,1,1)
 	if _turrets_seeing > 0:
 		sprite.modulate = Color(1, 0, 0, 1)
+
+func _enter_tree() -> void:
+	add_to_group("player", true)
 
 func _ready():
 	add_to_group("player")
@@ -254,3 +265,6 @@ func update_sliding(n: Vector2, r: Vector2) -> Vector2:
 	var fallback_tangent := n.orthogonal().normalized()
 	velocity = velocity.project(fallback_tangent)
 	return r - r.project(n)
+
+func get_current_velocity() -> Vector2:
+	return velocity
