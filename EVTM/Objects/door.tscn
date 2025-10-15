@@ -1,0 +1,29 @@
+[gd_scene load_steps=4 format=3 uid="uid://c735x8lpkf6dh"]
+
+[ext_resource type="Script" uid="uid://6s3d88m0fukl" path="res://Scripts/door.gd" id="1_5xojw"]
+[ext_resource type="Texture2D" uid="uid://dhmlkmluer50" path="res://Textures/door_unlocked.png" id="2_vkudc"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_yfpjd"]
+size = Vector2(32, 16)
+
+[node name="door" type="StaticBody2D"]
+script = ExtResource("1_5xojw")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_yfpjd")
+debug_color = Color(0.10222646, 0.5881161, 0.74674296, 0.41960785)
+
+[node name="TextureRect" type="TextureRect" parent="."]
+offset_left = -16.0
+offset_top = -8.0
+offset_right = 16.0
+offset_bottom = 8.0
+texture = ExtResource("2_vkudc")
+
+[node name="Area" type="Area2D" parent="."]
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Area"]
+shape = SubResource("RectangleShape2D_yfpjd")
+debug_color = Color(0.10222646, 0.5881161, 0.74674296, 0.41960785)
+
+[connection signal="body_entered" from="Area" to="." method="_on_area_body_entered"]
