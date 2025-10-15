@@ -22,7 +22,6 @@ func unlock() -> void:
 
 func _on_area_body_entered(body: Node2D) -> void:
 	if locked: return
-	print("Level finished")
 	if body.is_in_group("player"):
 		if connected_room != "":
 			get_tree().change_scene_to_file(connected_room)
