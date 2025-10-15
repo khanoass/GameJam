@@ -21,6 +21,7 @@ var _on_ice_this_step := false
 var _ice_tangent := Vector2.ZERO
 var _ring: Node2D
 var _turrets_seeing := 0
+var _caught := false
 
 const EPS := 0.001
 
@@ -45,9 +46,25 @@ const WALLS := {
 }
 var _last_wall_type := WALL_TYPE.Sticky
 
-# Called by turret when hitting the player
+# Called by camera when hitting the player
 func die():
-	get_tree().reload_current_scene()
+	if is_queued_for_deletion():
+		return
+	_caught = true
+		
+	# Spawn gas at top of the screen
+	var smoke = preload("res://Objects/smoke_effect.tscn").instantiate()
+	get_tree().current_scene.add_child(smoke)
+	
+	var viewport_size = get_viewport_rect().size
+	var camera = get_viewport().get_camera_2d().global_position
+	var top_center = camera - Vector2(0, viewport_size.y / 2)
+	smoke.global_position = top_center + Vector2(viewport_size.x / 2, 0)
+	
+	await get_tree().create_timer(2.5).timeout
+	
+	# Back to containment
+	get_tree().change_scene_to_file("res://Levels/containment_cell.tscn")
 
 func entered_turret_fov():
 	_turrets_seeing += 1
@@ -58,7 +75,8 @@ func exited_turret_fov():
 	update_spot_color()
 
 func update_spot_color():
-	sprite.modulate = Color(1,1,1,1)
+	if !_caught:
+		sprite.modulate = Color(1,1,1,1)
 	if _turrets_seeing > 0:
 		sprite.modulate = Color(1, 0, 0, 1)
 
