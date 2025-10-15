@@ -1,7 +1,8 @@
 [gd_scene load_steps=3 format=3 uid="uid://durc4x7dmglmm"]
 
-[ext_resource type="PackedScene" uid="uid://cn2shtf45floc" path="res://Objects/turret.tscn" id="1_e2o6t"]
+[ext_resource type="PackedScene" uid="uid://cn2shtf45floc" path="res://Objects/camera.tscn" id="1_e2o6t"]
 [ext_resource type="PackedScene" uid="uid://vd8mwkhg0yfr" path="res://Objects/wall.tscn" id="2_feb5d"]
+
 
 [node name="Turret-Sandbox" type="Node2D"]
 

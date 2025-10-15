@@ -2,8 +2,9 @@
 
 [ext_resource type="PackedScene" uid="uid://bnqh10gubjlg2" path="res://Objects/player.tscn" id="1_7jv1y"]
 [ext_resource type="TileSet" uid="uid://d2upg53hfj06h" path="res://Textures/level_tiles.tres" id="2_f5gwt"]
-[ext_resource type="PackedScene" uid="uid://cn2shtf45floc" path="res://Objects/turret.tscn" id="3_jou4l"]
+[ext_resource type="PackedScene" uid="uid://cn2shtf45floc" path="res://Objects/camera.tscn" id="3_jou4l"]
 [ext_resource type="PackedScene" uid="uid://by1ayyd5ve4o4" path="res://Objects/finish_line.tscn" id="4_0xoxh"]
+
 
 [node name="Level" type="Node2D"]
 

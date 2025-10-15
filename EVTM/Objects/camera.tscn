@@ -1,0 +1,24 @@
+[gd_scene load_steps=3 format=3 uid="uid://cn2shtf45floc"]
+
+[ext_resource type="Script" uid="uid://dlgjbojmx2qd6" path="res://Scripts/turret.gd" id="1_5wcd0"]
+[ext_resource type="Texture2D" uid="uid://cgqkt1hlgwbvl" path="res://Textures/camera.png" id="2_h8b3l"]
+
+[node name="Camera" type="Node2D"]
+script = ExtResource("1_5wcd0")
+
+[node name="Rays" type="Node2D" parent="."]
+visible = false
+
+[node name="Beams" type="Node2D" parent="."]
+visible = false
+
+[node name="FOV" type="Polygon2D" parent="."]
+
+[node name="Rect" type="TextureRect" parent="."]
+offset_left = -8.0
+offset_top = -8.0
+offset_right = 8.0
+offset_bottom = 8.0
+texture = ExtResource("2_h8b3l")
+
+[node name="DetectTimer" type="Timer" parent="."]
