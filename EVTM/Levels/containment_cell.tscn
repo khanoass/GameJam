@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://cryd5xg1i1fl2"]
+[gd_scene load_steps=5 format=3 uid="uid://cryd5xg1i1fl2"]
 
 [ext_resource type="PackedScene" uid="uid://bnqh10gubjlg2" path="res://Objects/player.tscn" id="1_135yf"]
 [ext_resource type="TileSet" uid="uid://d2upg53hfj06h" path="res://Textures/level_tiles.tres" id="2_hw7k4"]
 [ext_resource type="PackedScene" uid="uid://c735x8lpkf6dh" path="res://Objects/door.tscn" id="3_5hdxe"]
+[ext_resource type="PackedScene" uid="uid://jqgqn3cbd6ae" path="res://Objects/security_guard.tscn" id="4_135yf"]
 
 [node name="Level" type="Node2D"]
 
@@ -18,3 +19,6 @@ layer_0/tile_data = PackedInt32Array(131078, 196608, 0, 131077, 196608, 0, 13107
 position = Vector2(119, -17)
 rotation = -1.5707964
 connected_room = "res://Levels/level_1.tscn"
+
+[node name="CharacterBody2D" parent="." instance=ExtResource("4_135yf")]
+position = Vector2(61, 15)

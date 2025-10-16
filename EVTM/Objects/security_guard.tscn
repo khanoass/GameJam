@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://jqgqn3cbd6ae"]
+
+[ext_resource type="Script" uid="uid://wyef2jncvm8i" path="res://Objects/security_guard.gd" id="1_ofmel"]
+[ext_resource type="Texture2D" uid="uid://bw1xmk8naxeos" path="res://Textures/security_guard.png" id="2_ex6oi"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ofmel"]
+size = Vector2(16, 32)
+
+[node name="CharacterBody2D" type="CharacterBody2D"]
+script = ExtResource("1_ofmel")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_ofmel")
+debug_color = Color(0.36988944, 0.51995707, 0.87127405, 0.41960785)
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_ex6oi")
+
+[node name="Laser" type="RayCast2D" parent="."]
+target_position = Vector2(200, 0)
+collide_with_areas = true
