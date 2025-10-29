@@ -15,6 +15,10 @@ run/main_scene="uid://cryd5xg1i1fl2"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://Textures/icon.svg"
 
+[autoload]
+
+InventoryBus="*res://Modifiers/inventory_bus.gd"
+
 [global_group]
 
 player=""

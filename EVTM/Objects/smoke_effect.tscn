@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://d2cydcjwa5xaf"]
 
-[ext_resource type="Script" uid="uid://lsft76v4l03v" path="res://Objects/smoke_effect.gd" id="1_scv78"]
+[ext_resource type="Script" uid="uid://lsft76v4l03v" path="res://Scripts/smoke_effect.gd" id="1_scv78"]
 
 [sub_resource type="Gradient" id="Gradient_n2rgu"]
 offsets = PackedFloat32Array(0.16463415, 1)

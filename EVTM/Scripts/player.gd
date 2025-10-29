@@ -1,5 +1,8 @@
 extends CharacterBody2D
 
+# Effect multipliers
+@export var jump_speed_mul: float = 1.0
+
 @export var gravity: float = 1200
 @export var gravity_vector: Vector2 = Vector2(0, gravity)
 @export var dash_decay := 2.0
@@ -8,8 +11,9 @@ extends CharacterBody2D
 @export var slide_keep_ratio := 0.85
 @export var slide_decay := 0.0
 @export var charge_time: float = 0.8
-@export var min_jump_speed: float = -300.0
-@export var max_jump_speed: float = -600.0
+@export var base_max_jump_speed: float = -600.0
+@export var base_min_jump_speed: float = -300.0
+
 @export var ring_path: String = "ChargeRing"
 
 @onready var sprite := $AnimatedSprite2D
@@ -114,7 +118,10 @@ func apply_dash():
 	var t: float = _charge_elapsed / max(charge_time, 0.0001)  # 0..1
 	var jump_dir: Vector2 = (global_position - get_child(3).global_position).normalized()
 	var eased := t * t  # weiche Kurve; ersetze durch t für linear
-	var jump_speed: float = lerp(min_jump_speed, max_jump_speed, clamp(eased, 0.0, 1.0))
+	
+	var min = base_min_jump_speed * jump_speed_mul
+	var max = base_max_jump_speed * jump_speed_mul
+	var jump_speed: float = lerp(min, max, clamp(eased, 0.0, 1.0))
 	velocity = jump_dir * jump_speed
 	_charging = false
 	_dashing = true
