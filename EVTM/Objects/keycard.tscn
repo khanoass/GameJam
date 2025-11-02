@@ -14,10 +14,8 @@ script = ExtResource("1_epmmf")
 position = Vector2(0, -8)
 shape = SubResource("RectangleShape2D_th7hp")
 
-[node name="TextureRect" type="TextureRect" parent="."]
-offset_left = -8.0
-offset_top = -17.0
-offset_right = 9.0
+[node name="TextureRect" type="Sprite2D" parent="."]
+position = Vector2(0, -8)
 texture = ExtResource("2_2ywyv")
 
 [node name="Area2D" type="Area2D" parent="."]

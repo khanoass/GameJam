@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://bmkqss82rugvr"]
+
+[ext_resource type="Script" uid="uid://bvr4i1fm4bk2k" path="res://Powerups/powerup_pickup.gd" id="1_25gla"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_45y2o"]
+
+[node name="PowerupPickup" type="Area2D"]
+script = ExtResource("1_25gla")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_45y2o")
+
+[node name="PowerupSprite" type="Sprite2D" parent="."]

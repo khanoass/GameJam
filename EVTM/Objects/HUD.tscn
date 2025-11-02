@@ -1,14 +1,15 @@
-[gd_scene load_steps=3 format=3 uid="uid://cpaiie4a57pij"]
+[gd_scene load_steps=4 format=3 uid="uid://cpaiie4a57pij"]
 
 [ext_resource type="Texture2D" uid="uid://bpftuiq2yhecj" path="res://Textures/key_card.png" id="1_0vboi"]
 [ext_resource type="Script" uid="uid://cvhwelq1ekqbw" path="res://Scripts/hud.gd" id="1_tq56e"]
+[ext_resource type="FontFile" uid="uid://h7ss4i8ejtjb" path="res://Fonts/zig.ttf" id="3_sccps"]
 
 [node name="Hud" type="Node2D"]
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 script = ExtResource("1_tq56e")
 
-[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer"]
+[node name="KeypassContainer" type="MarginContainer" parent="CanvasLayer"]
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
@@ -18,19 +19,42 @@ offset_right = -11.0
 offset_bottom = 50.0
 grow_horizontal = 0
 
-[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/MarginContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/KeypassContainer"]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/MarginContainer/PanelContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/KeypassContainer/PanelContainer"]
 layout_mode = 2
 
-[node name="TextureRect" type="TextureRect" parent="CanvasLayer/MarginContainer/PanelContainer/HBoxContainer"]
-custom_minimum_size = Vector2(32, 32)
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/KeypassContainer/PanelContainer/HBoxContainer"]
+custom_minimum_size = Vector2(40, 35)
 layout_mode = 2
 size_flags_horizontal = 4
 texture = ExtResource("1_0vboi")
 
-[node name="Label" type="Label" parent="CanvasLayer/MarginContainer/PanelContainer/HBoxContainer"]
+[node name="Label" type="Label" parent="CanvasLayer/KeypassContainer/PanelContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_constants/paragraph_spacing = 0
+theme_override_constants/outline_size = 0
+theme_override_fonts/font = ExtResource("3_sccps")
+theme_override_font_sizes/font_size = 23
 text = "0"
+
+[node name="Control" type="Control" parent="CanvasLayer/KeypassContainer/PanelContainer/HBoxContainer"]
+custom_minimum_size = Vector2(5, 0)
+layout_mode = 2
+
+[node name="PowerupsContainer" type="MarginContainer" parent="CanvasLayer"]
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -20.0
+offset_right = 40.0
+offset_bottom = 20.0
+grow_vertical = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/PowerupsContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/PowerupsContainer/PanelContainer"]
+layout_mode = 2
