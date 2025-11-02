@@ -26,6 +26,7 @@ var _ice_tangent := Vector2.ZERO
 var _ring: Node2D
 var _turrets_seeing := 0
 var _caught := false
+var keycard := 0
 
 const EPS := 0.001
 

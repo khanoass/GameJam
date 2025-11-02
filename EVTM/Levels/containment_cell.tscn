@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://bnqh10gubjlg2" path="res://Objects/player.tscn" id="1_135yf"]
 [ext_resource type="TileSet" uid="uid://d2upg53hfj06h" path="res://Textures/level_tiles.tres" id="2_hw7k4"]
 [ext_resource type="PackedScene" uid="uid://c735x8lpkf6dh" path="res://Objects/door.tscn" id="3_5hdxe"]
-[ext_resource type="PackedScene" uid="uid://jqgqn3cbd6ae" path="res://Objects/security_guard.tscn" id="4_135yf"]
+[ext_resource type="PackedScene" uid="uid://brgn8kq88rold" path="res://Objects/keycard.tscn" id="4_135yf"]
 
 [node name="Level" type="Node2D"]
 
@@ -19,17 +19,22 @@ position = Vector2(27, -10)
 [node name="door_1" parent="." instance=ExtResource("3_5hdxe")]
 position = Vector2(119, -17)
 rotation = -1.5707964
+id = "door_1"
 connected_room = "res://Levels/level_1.tscn"
 
 [node name="door_2" parent="." instance=ExtResource("3_5hdxe")]
 position = Vector2(-73, -17)
 rotation = 1.5707964
+id = "door_2"
 connected_room = "res://Levels/level_2.tscn"
 
 [node name="door_3" parent="." instance=ExtResource("3_5hdxe")]
 position = Vector2(63.000004, -57)
 rotation = -3.1415925
+id = "door_3"
 locked = true
+connected_room = "res://Levels/player-sandbox.tscn"
 
-[node name="CharacterBody2D" parent="." instance=ExtResource("4_135yf")]
-position = Vector2(-26, 13)
+[node name="keypass" parent="." instance=ExtResource("4_135yf")]
+position = Vector2(-23, 30)
+id = "test_key"
