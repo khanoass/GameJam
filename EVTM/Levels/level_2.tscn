@@ -1,11 +1,14 @@
-[gd_scene load_steps=5 format=3 uid="uid://byaocesfunkuf"]
+[gd_scene load_steps=6 format=3 uid="uid://byaocesfunkuf"]
 
 [ext_resource type="TileSet" uid="uid://d2upg53hfj06h" path="res://Textures/level_tiles.tres" id="1_arsda"]
+[ext_resource type="PackedScene" uid="uid://cpaiie4a57pij" path="res://Objects/HUD.tscn" id="1_bcgyv"]
 [ext_resource type="PackedScene" uid="uid://c735x8lpkf6dh" path="res://Objects/door.tscn" id="2_bcgyv"]
 [ext_resource type="PackedScene" uid="uid://bnqh10gubjlg2" path="res://Objects/player.tscn" id="2_dgq3b"]
 [ext_resource type="PackedScene" uid="uid://cn2shtf45floc" path="res://Objects/camera.tscn" id="3_bcgyv"]
 
 [node name="Level" type="Node2D"]
+
+[node name="Hud" parent="." instance=ExtResource("1_bcgyv")]
 
 [node name="Map" type="TileMap" parent="."]
 tile_set = ExtResource("1_arsda")

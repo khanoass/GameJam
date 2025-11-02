@@ -1,12 +1,15 @@
-[gd_scene load_steps=6 format=3 uid="uid://eefrahvu6g37"]
+[gd_scene load_steps=7 format=3 uid="uid://eefrahvu6g37"]
 
 [ext_resource type="PackedScene" uid="uid://bnqh10gubjlg2" path="res://Objects/player.tscn" id="1_3hls8"]
+[ext_resource type="PackedScene" uid="uid://cpaiie4a57pij" path="res://Objects/HUD.tscn" id="1_rfktq"]
 [ext_resource type="TileSet" uid="uid://d2upg53hfj06h" path="res://Textures/level_tiles.tres" id="2_hbghi"]
 [ext_resource type="PackedScene" uid="uid://c735x8lpkf6dh" path="res://Objects/door.tscn" id="2_syshm"]
 [ext_resource type="PackedScene" uid="uid://cn2shtf45floc" path="res://Objects/camera.tscn" id="3_hn12h"]
 [ext_resource type="PackedScene" uid="uid://jqgqn3cbd6ae" path="res://Objects/security_guard.tscn" id="5_syshm"]
 
 [node name="Level" type="Node2D"]
+
+[node name="Hud" parent="." instance=ExtResource("1_rfktq")]
 
 [node name="TileMap" type="TileMap" parent="."]
 position = Vector2(-1, -1)

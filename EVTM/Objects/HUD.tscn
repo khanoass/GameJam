@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://cpaiie4a57pij"]
 
 [ext_resource type="Texture2D" uid="uid://bpftuiq2yhecj" path="res://Textures/key_card.png" id="1_0vboi"]
-[ext_resource type="Script" uid="uid://cvhwelq1ekqbw" path="res://Objects/hud.gd" id="1_tq56e"]
+[ext_resource type="Script" uid="uid://cvhwelq1ekqbw" path="res://Scripts/hud.gd" id="1_tq56e"]
 
 [node name="Hud" type="Node2D"]
 
