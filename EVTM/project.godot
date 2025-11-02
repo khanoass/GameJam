@@ -17,8 +17,8 @@ config/icon="res://Textures/icon.svg"
 
 [autoload]
 
-InventoryBus="*res://Modifiers/inventory_bus.gd"
-GameState="*res://Scripts/gamestate.gd"
+InventoryBus="*res://Singletons/inventory_bus.gd"
+GameState="*res://Singletons/gamestate.gd"
 
 [global_group]
 

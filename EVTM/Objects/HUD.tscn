@@ -1,0 +1,36 @@
+[gd_scene load_steps=3 format=3 uid="uid://cpaiie4a57pij"]
+
+[ext_resource type="Texture2D" uid="uid://bpftuiq2yhecj" path="res://Textures/key_card.png" id="1_0vboi"]
+[ext_resource type="Script" uid="uid://cvhwelq1ekqbw" path="res://Objects/hud.gd" id="1_tq56e"]
+
+[node name="Hud" type="Node2D"]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+script = ExtResource("1_tq56e")
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -51.0
+offset_top = 10.0
+offset_right = -11.0
+offset_bottom = 50.0
+grow_horizontal = 0
+
+[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/MarginContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/MarginContainer/PanelContainer"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/MarginContainer/PanelContainer/HBoxContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+texture = ExtResource("1_0vboi")
+
+[node name="Label" type="Label" parent="CanvasLayer/MarginContainer/PanelContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "0"

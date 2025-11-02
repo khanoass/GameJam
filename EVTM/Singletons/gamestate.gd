@@ -5,13 +5,20 @@ var active_keypasses := 0
 
 var unlocked_doors := {}
 
+signal keypass_count_changed(new_count: int)
+
+func keypass_count() -> int:
+	return active_keypasses
+
 func collect_keypass(id: String):
-	if not collected_keypasses.get(id, false):
-		collected_keypasses[id] = true
-		active_keypasses += 1
+	if keypass_is_collected(id):
+		return
+	collected_keypasses[id] = true
+	active_keypasses += 1
+	emit_signal("keypass_count_changed", active_keypasses)
 
 func keypass_is_collected(id: String) -> bool:
-	return collected_keypasses.get(id, false)
+	return collected_keypasses.has(id)
 
 func use_keypass() -> bool:
 	if active_keypasses <= 0:
