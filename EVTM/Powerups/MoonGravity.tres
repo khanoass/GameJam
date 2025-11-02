@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="MoonGravity" load_steps=2 format=3 uid="uid://c05fpuh33txf7"]
+
+[ext_resource type="Script" uid="uid://bf6f2dg1hrjmk" path="res://Powerups/moon_gravity.gd" id="1_sdfci"]
+
+[resource]
+script = ExtResource("1_sdfci")
+name = "Moon Gravity"
+description = "The gravity is mmon like!!"
+texture_path = "res://Textures/moon_gravity.png"
+metadata/_custom_type_script = "uid://bf6f2dg1hrjmk"

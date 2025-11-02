@@ -1,12 +1,13 @@
 extends CharacterBody2D
 
+# Powerup variables
 var base_speed = 1
 var speed = 1
-
-@export var base_max_jump_speed: float = -600.0
-@export var base_min_jump_speed: float = -300.0
+var base_gravity = 1200
 @export var gravity: float = 1200
-@export var gravity_vector: Vector2 = Vector2(0, gravity)
+
+@export var max_jump_speed: float = -600.0
+@export var min_jump_speed: float = -300.0
 @export var dash_decay := 2.0
 @export var bounce_coeff := 0.9
 @export var min_speed_after_bounce := 60.0
@@ -127,8 +128,8 @@ func apply_dash():
 	var jump_dir: Vector2 = (global_position - get_child(3).global_position).normalized()
 	var eased := t * t  # weiche Kurve; ersetze durch t für linear
 	
-	var min = base_min_jump_speed * speed
-	var max = base_max_jump_speed * speed
+	var min = min_jump_speed * speed
+	var max = max_jump_speed * speed
 	var jump_speed: float = lerp(min, max, clamp(eased, 0.0, 1.0))
 	velocity = jump_dir * jump_speed
 	_charging = false
@@ -153,7 +154,7 @@ func check_for_charge(delta: float):
 		hide_ring()
 	
 func dash_step(delta: float):
-	velocity += gravity_vector * delta
+	velocity += Vector2(0, gravity) * delta
 
 	var remaining := velocity * delta
 	var max_iters := 8
@@ -262,8 +263,9 @@ func update_sliding(n: Vector2, r: Vector2) -> Vector2:
 
 	if is_wall:
 		velocity.x = 0.0
-		var gdir := gravity_vector.normalized()
-		if gravity_vector.length() > 0.0:
+		var gv = Vector2(0, gravity)
+		var gdir := gv.normalized()
+		if gv.length() > 0.0:
 			gdir = Vector2.DOWN
 		return r.project(gdir)
 
