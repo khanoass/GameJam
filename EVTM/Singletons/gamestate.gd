@@ -53,7 +53,7 @@ func collect_powerup(id: String, powerup: Powerup) -> bool:
 	powerup.apply(player)
 	active_powerups.append(powerup)
 	collected_powerups[id] = true
-	emit_signal("powerups_state_changed", collected_powerups)
+	emit_signal("powerups_state_changed", active_powerups)
 	return true
 
 func powerup_is_collected(id: String) -> bool:

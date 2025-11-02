@@ -17,6 +17,7 @@ func update_powerups(powerups: Array[Powerup]) -> void:
 	for child in powerupsVBox.get_children():
 		child.queue_free()
 	
+	powerupsContainer.visible = true
 	if powerups.size() <= 0:
 		powerupsContainer.visible = false
 		return
