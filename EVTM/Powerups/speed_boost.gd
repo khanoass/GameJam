@@ -1,7 +1,7 @@
 class_name SpeedBoost
 extends Powerup
 
-@export var speed_mult: float = 1.25
+@export var speed_mult: float = 2
 
 func apply(player: Node):
 	player.speed *= speed_mult

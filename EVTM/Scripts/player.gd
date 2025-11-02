@@ -95,6 +95,13 @@ func _ready():
 		_ring.visible = true
 		if _ring.has_method("set_value"):
 			_ring.call("set_value", 0.0)
+	# Powerups
+	update_powerups(GameState.powerups_state())
+	GameState.powerups_state_changed.connect(update_powerups)
+
+func update_powerups(powerups: Array[Powerup]):
+	for p in powerups:
+		p.apply(self)
 			
 func _physics_process(delta: float):
 	if _dashing:

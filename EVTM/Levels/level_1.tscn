@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://eefrahvu6g37"]
+[gd_scene load_steps=9 format=3 uid="uid://eefrahvu6g37"]
 
 [ext_resource type="PackedScene" uid="uid://bnqh10gubjlg2" path="res://Objects/player.tscn" id="1_3hls8"]
 [ext_resource type="PackedScene" uid="uid://cpaiie4a57pij" path="res://Objects/HUD.tscn" id="1_rfktq"]
@@ -6,6 +6,8 @@
 [ext_resource type="PackedScene" uid="uid://c735x8lpkf6dh" path="res://Objects/door.tscn" id="2_syshm"]
 [ext_resource type="PackedScene" uid="uid://cn2shtf45floc" path="res://Objects/camera.tscn" id="3_hn12h"]
 [ext_resource type="PackedScene" uid="uid://jqgqn3cbd6ae" path="res://Objects/security_guard.tscn" id="5_syshm"]
+[ext_resource type="PackedScene" uid="uid://bmkqss82rugvr" path="res://Powerups/powerup_pickup.tscn" id="7_77x7w"]
+[ext_resource type="Resource" uid="uid://3832k8yyftae" path="res://Powerups/SpeedBoost.tres" id="8_xoyoh"]
 
 [node name="Level" type="Node2D"]
 
@@ -23,6 +25,7 @@ id = "lvl_1_1"
 connected_room = "res://Levels/containment_cell.tscn"
 
 [node name="player" parent="." instance=ExtResource("1_3hls8")]
+position = Vector2(23, -8)
 
 [node name="Turret" parent="." instance=ExtResource("3_hn12h")]
 position = Vector2(39, -122)
@@ -65,3 +68,8 @@ rotation_clockwise = false
 
 [node name="CharacterBody2D" parent="." instance=ExtResource("5_syshm")]
 position = Vector2(683, -321)
+
+[node name="SpeedBoost" parent="." instance=ExtResource("7_77x7w")]
+position = Vector2(4, -96)
+id = "speed_1"
+powerup = ExtResource("8_xoyoh")
