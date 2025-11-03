@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="ChargeTimeBoost" load_steps=2 format=3 uid="uid://bn028i6qwhvhm"]
+
+[ext_resource type="Script" uid="uid://cklx1k6nqmbea" path="res://Powerups/charge_time_boost.gd" id="1_0c3c8"]
+
+[resource]
+script = ExtResource("1_0c3c8")
+name = "Charge Boost"
+description = "This is a cool boost"
+texture_path = "res://Textures/finish_flag.png"
+metadata/_custom_type_script = "uid://cklx1k6nqmbea"
