@@ -69,6 +69,7 @@ rotation_clockwise = false
 
 [node name="CharacterBody2D" parent="." instance=ExtResource("5_syshm")]
 position = Vector2(683, -321)
+can_look_up = true
 
 [node name="SpeedBoost" parent="." instance=ExtResource("7_77x7w")]
 position = Vector2(317, -189)

@@ -1,0 +1,32 @@
+[gd_scene load_steps=4 format=3 uid="uid://ct7fclkjykqj0"]
+
+[ext_resource type="Script" uid="uid://7mdeflhkr7w5" path="res://scientist.gd" id="1_3li26"]
+[ext_resource type="Texture2D" uid="uid://c2366rdr2nusl" path="res://Textures/Scientist.png" id="1_dkah4"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_dkah4"]
+radius = 100.0
+
+[node name="Scientist" type="CharacterBody2D"]
+script = ExtResource("1_3li26")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_dkah4")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+
+[node name="TriggerZone" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TriggerZone"]
+shape = SubResource("CircleShape2D_dkah4")
+
+[node name="SpeechBubble" type="Node2D" parent="."]
+position = Vector2(11, -26)
+
+[node name="NinePatchRect" type="NinePatchRect" parent="SpeechBubble"]
+offset_right = 42.0
+offset_bottom = 27.0
+
+[node name="Label" type="Label" parent="SpeechBubble"]
+offset_right = 40.0
+offset_bottom = 23.0
+theme_override_font_sizes/font_size = 10

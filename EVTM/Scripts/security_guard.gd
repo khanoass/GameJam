@@ -32,27 +32,28 @@ func _physics_process(delta: float) -> void:
 	queue_redraw()
 	
 func update_laser(delta: float) -> void:
-	if tracking_player and player_ref:
-		# Follow player smoothly
-		var to_player = (player_ref.global_position - global_position)
-		if to_player.length() > vision_range:
-			# Player out of range -> stop tracking
-			tracking_player = false
-			player_ref = null
-			return
-		
-		var target = to_player.normalized() * vision_range
-		laser.target_position = laser.target_position.lerp(target, look_speed * delta)
-	else:
+	if can_look_up:
+		if tracking_player and player_ref:
+			# Follow player smoothly
+			var to_player = (player_ref.global_position - global_position)
+			if to_player.length() > vision_range:
+				# Player out of range -> stop tracking
+				tracking_player = false
+				player_ref = null
+				return
+			
+			var target = to_player.normalized() * vision_range
+			laser.target_position = laser.target_position.lerp(target, look_speed * delta)
+		else:
 		# Normal scanning behavior
-		if can_look_up:
+
 			var desired_y = -vision_range if look_up else 0.0
 			laser.target_position.y = lerp(float(laser.target_position.y), desired_y, look_speed * delta)
 			laser.target_position.x = vision_range * direction
-			if abs(laser.target_position.y - desired_y) < 1.0:
+			if abs(laser.target_position.y - desired_y) < 5.0:
 				look_up = !look_up
-		else:
-			laser.target_position = Vector2(vision_range * direction, 0.0)
+	else:
+		laser.target_position = Vector2(vision_range * direction, 0.0)
 			
 	laser.force_raycast_update()
 
