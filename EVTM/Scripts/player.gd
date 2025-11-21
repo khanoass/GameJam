@@ -8,6 +8,11 @@ var base_gravity = 1200
 var base_charge_time := 0.8
 @export var charge_time := 0.8
 
+@export var player_mass: float = 1.0
+
+var _attached_body: RigidBody2D = null
+var _attached_offset: Vector2 = Vector2.ZERO
+
 @export var max_jump_speed: float = -600.0
 @export var min_jump_speed: float = -300.0
 @export var bounce_coeff := 0.9
@@ -106,10 +111,26 @@ func update_powerups(powerups: Array[Powerup]):
 		p.apply(self)
 			
 func _physics_process(delta: float):
+	if _attached_body != null:
+		_update_attached_state(delta)
+		check_for_charge(delta)
+		return
+
 	if _dashing:
 		dash_step(delta)
 		return
+
 	check_for_charge(delta)
+	
+func _update_attached_state(delta: float) -> void:
+	if _attached_body == null or not is_instance_valid(_attached_body):
+		_attached_body = null
+		return
+	global_position = _attached_body.global_position + _attached_offset
+	
+func _detach_from_body() -> void:
+	_attached_body = null
+	_attached_offset = Vector2.ZERO
 		
 func show_ring():
 	if _ring:
@@ -132,6 +153,10 @@ func apply_dash():
 	var min = min_jump_speed * speed
 	var max = max_jump_speed * speed
 	var jump_speed: float = lerp(min, max, clamp(eased, 0.0, 1.0))
+	
+	if _attached_body != null:
+		_detach_from_body()
+		
 	velocity = jump_dir * jump_speed
 	_charging = false
 	_dashing = true
@@ -169,12 +194,26 @@ func dash_step(delta: float):
 		if step.length() > max_step:
 			step = step.normalized() * max_step
 
-		var collision := move_and_collide(step, false, 0.08, true)
+		var collision: KinematicCollision2D = move_and_collide(step, false, 0.08, true)
+		
 		if collision == null:
 			remaining -= step
 			max_iters -= 1
 			continue
-
+			
+		var collider := collision.get_collider()
+			
+		if collider is RigidBody2D:
+			_handle_rigidbody_collision(collision, velocity)
+			if _attached_body != null:
+				remaining = Vector2.ZERO
+				break
+				
+			var r_rb := collision.get_remainder()
+			remaining = r_rb
+			max_iters -= 1
+			continue
+		
 		var n := collision.get_normal().normalized()
 		var r := collision.get_remainder()
 		var is_recovery := r.is_zero_approx() and collision.get_travel().is_zero_approx()
@@ -304,3 +343,30 @@ func update_sliding(n: Vector2, r: Vector2) -> Vector2:
 
 func get_current_velocity() -> Vector2:
 	return velocity
+
+
+func _handle_rigidbody_collision(collision: KinematicCollision2D, prev_velocity: Vector2) -> void:
+	var body := collision.get_collider() as RigidBody2D
+	if body == null:
+		return
+
+	var m1: float = player_mass
+	var m2: float = body.mass
+	var denom := m1 + m2
+	if denom <= 0.0:
+		return
+
+	var v1: Vector2 = prev_velocity
+	var v2: Vector2 = body.linear_velocity
+
+	# Voll inelastischer Stoß: Impuls geht in gemeinsame Geschwindigkeit
+	var v_common: Vector2 = (m1 * v1 + m2 * v2) / denom
+	body.linear_velocity = v_common
+
+	# Spieler wird an der Box "festgepinnt" – egal ob oben drauf oder seitlich
+	_attached_body = body
+	_attached_offset = global_position - body.global_position
+
+	# Eigene Bewegung stoppen, Dash beenden
+	velocity = Vector2.ZERO
+	_dashing = false

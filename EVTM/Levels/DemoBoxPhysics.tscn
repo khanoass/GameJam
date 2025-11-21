@@ -1,14 +1,15 @@
-[gd_scene load_steps=4 format=3 uid="uid://bqh25luqgvprm"]
+[gd_scene load_steps=5 format=3 uid="uid://bqh25luqgvprm"]
 
 [ext_resource type="PackedScene" uid="uid://bnqh10gubjlg2" path="res://Objects/player.tscn" id="1_7gxfr"]
 [ext_resource type="PackedScene" uid="uid://cih2i1h70d3if" path="res://Objects/big_moveable_box.tscn" id="2_7gxfr"]
+[ext_resource type="Script" uid="uid://dldn2yfd7myue" path="res://Levels/floor.gd" id="3_7gxfr"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_j7aua"]
 
 [node name="DemoBoxPhysics" type="Node2D"]
 
 [node name="BigMoveableBox" parent="." instance=ExtResource("2_7gxfr")]
-position = Vector2(100, 0)
+position = Vector2(115, 76)
 scale = Vector2(1, 1.0059584)
 
 [node name="player" parent="." instance=ExtResource("1_7gxfr")]
@@ -16,6 +17,7 @@ scale = Vector2(1, 1.0059584)
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
 position = Vector2(-273, 108)
 scale = Vector2(1.36, 1)
+script = ExtResource("3_7gxfr")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
 shape = SubResource("WorldBoundaryShape2D_j7aua")
