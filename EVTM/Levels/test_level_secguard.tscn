@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://jqgqn3cbd6ae" path="res://Objects/security_guard.tscn" id="1_e50wv"]
 [ext_resource type="TileSet" uid="uid://d2upg53hfj06h" path="res://Textures/level_tiles.tres" id="2_eitmp"]
 [ext_resource type="PackedScene" uid="uid://bnqh10gubjlg2" path="res://Objects/player.tscn" id="3_0d0dj"]
-[ext_resource type="PackedScene" uid="uid://ct7fclkjykqj0" path="res://scientist.tscn" id="4_0d0dj"]
+[ext_resource type="PackedScene" uid="uid://ct7fclkjykqj0" path="res://Objects/scientist.tscn" id="4_0d0dj"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_ocpx3"]
 
@@ -26,4 +26,4 @@ layer_0/tile_data = PackedInt32Array(2, 196608, 0, 1, 196608, 0, 0, 196608, 0, 6
 position = Vector2(-137, -15)
 
 [node name="Scientist" parent="." instance=ExtResource("4_0d0dj")]
-position = Vector2(-554, -24)
+position = Vector2(-553, -18)

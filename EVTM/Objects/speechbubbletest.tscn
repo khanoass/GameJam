@@ -1,0 +1,12 @@
+[gd_scene load_steps=2 format=3 uid="uid://hgjtxu7e7154"]
+
+[ext_resource type="Script" uid="uid://d1yq4lgqv17i" path="res://Scripts/node_2d.gd" id="1_dxc5v"]
+
+[node name="speechbubbletest" type="CanvasLayer"]
+script = ExtResource("1_dxc5v")
+
+[node name="SpeechBubble" type="TileMapLayer" parent="."]
+
+[node name="SpeechLine" type="RichTextLabel" parent="."]
+offset_right = 40.0
+offset_bottom = 40.0

@@ -1,0 +1,40 @@
+[gd_scene load_steps=5 format=3 uid="uid://ct7fclkjykqj0"]
+
+[ext_resource type="Script" uid="uid://7mdeflhkr7w5" path="res://Scripts/scientist.gd" id="1_3li26"]
+[ext_resource type="Texture2D" uid="uid://c2366rdr2nusl" path="res://Textures/Scientist.png" id="1_dkah4"]
+[ext_resource type="Texture2D" uid="uid://brvpweblj5qih" path="res://Textures/bubble.png" id="3_8arxd"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_dkah4"]
+radius = 100.0
+
+[node name="Scientist" type="CharacterBody2D"]
+script = ExtResource("1_3li26")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_dkah4")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+
+[node name="TriggerZone" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TriggerZone"]
+shape = SubResource("CircleShape2D_dkah4")
+
+[node name="Bubble" type="NinePatchRect" parent="."]
+offset_left = 12.0
+offset_top = -41.0
+offset_right = 101.0
+offset_bottom = 17.0
+texture = ExtResource("3_8arxd")
+region_rect = Rect2(4.171467, 5.134431, 9.744858, 7.681756)
+
+[node name="Label" type="Label" parent="Bubble"]
+layout_mode = 0
+offset_left = 23.0
+offset_top = 19.0
+offset_right = 77.0
+offset_bottom = 47.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 10
+horizontal_alignment = 1
+vertical_alignment = 1
