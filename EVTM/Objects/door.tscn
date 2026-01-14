@@ -7,7 +7,7 @@
 size = Vector2(30, 14)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_vkudc"]
-size = Vector2(36, 20)
+size = Vector2(32, 16)
 
 [node name="door" type="StaticBody2D"]
 script = ExtResource("1_5xojw")

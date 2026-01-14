@@ -35,6 +35,10 @@ var _turrets_seeing := 0
 var _caught := false
 var keycard := 0
 
+var camefrom: int = 0
+
+var dead := false
+
 const EPS := 0.001
 
 enum OBJECT_TYPE {
@@ -60,9 +64,11 @@ var _last_wall_type := WALL_TYPE.Sticky
 
 # Called by camera when hitting the player
 func die():
+	dead = true
 	if is_queued_for_deletion():
 		return
 	_caught = true
+	_ring.visible = false
 	
 	# Spawn gas at top of the screen
 	var smoke = preload("res://Objects/smoke_effect.tscn").instantiate()
@@ -114,6 +120,9 @@ func _physics_process(delta: float):
 	if _attached_body != null:
 		_update_attached_state(delta)
 		check_for_charge(delta)
+		return
+		
+	if dead:
 		return
 
 	if _dashing:

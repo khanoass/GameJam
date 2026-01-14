@@ -1,14 +1,14 @@
-[gd_scene load_steps=8 format=3 uid="uid://byaocesfunkuf"]
+[gd_scene load_steps=7 format=3 uid="uid://byaocesfunkuf"]
 
 [ext_resource type="TileSet" uid="uid://d2upg53hfj06h" path="res://Textures/level_tiles.tres" id="1_arsda"]
 [ext_resource type="PackedScene" uid="uid://cpaiie4a57pij" path="res://Objects/HUD.tscn" id="1_bcgyv"]
+[ext_resource type="Script" uid="uid://be2q4aeybes7h" path="res://Levels/level_2.gd" id="1_fbld2"]
 [ext_resource type="PackedScene" uid="uid://c735x8lpkf6dh" path="res://Objects/door.tscn" id="2_bcgyv"]
 [ext_resource type="PackedScene" uid="uid://bnqh10gubjlg2" path="res://Objects/player.tscn" id="2_dgq3b"]
 [ext_resource type="PackedScene" uid="uid://cn2shtf45floc" path="res://Objects/camera.tscn" id="3_bcgyv"]
-[ext_resource type="PackedScene" uid="uid://bmkqss82rugvr" path="res://Powerups/powerup_pickup.tscn" id="6_s275v"]
-[ext_resource type="Resource" uid="uid://bn028i6qwhvhm" path="res://Powerups/ChargeTimeBoost.tres" id="7_s275v"]
 
 [node name="Level" type="Node2D"]
+script = ExtResource("1_fbld2")
 
 [node name="Hud" parent="." instance=ExtResource("1_bcgyv")]
 
@@ -23,6 +23,7 @@ id = "lvl_2_1"
 connected_room = "res://Levels/containment_cell.tscn"
 
 [node name="player" parent="." instance=ExtResource("2_dgq3b")]
+position = Vector2(34, -51)
 
 [node name="Start Turret" parent="." instance=ExtResource("3_bcgyv")]
 position = Vector2(-14, -138)
@@ -44,7 +45,14 @@ rotating = true
 rotation_clockwise = false
 rotation_speed = 20.0
 
-[node name="Charge Boost" parent="." instance=ExtResource("6_s275v")]
-position = Vector2(125, -59)
-id = "charge_1"
-powerup = ExtResource("7_s275v")
+[node name="door2" parent="." instance=ExtResource("2_bcgyv")]
+position = Vector2(808, -593)
+rotation = 1.5707964
+id = "end_lvl_2"
+connected_room = "res://Levels/level_4.tscn"
+
+[node name="End" type="Marker2D" parent="."]
+position = Vector2(839, -580)
+
+[node name="Start" type="Marker2D" parent="."]
+position = Vector2(2, -2)

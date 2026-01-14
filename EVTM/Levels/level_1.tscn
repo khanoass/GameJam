@@ -1,6 +1,7 @@
-[gd_scene load_steps=10 format=3 uid="uid://eefrahvu6g37"]
+[gd_scene load_steps=11 format=3 uid="uid://eefrahvu6g37"]
 
 [ext_resource type="PackedScene" uid="uid://bnqh10gubjlg2" path="res://Objects/player.tscn" id="1_3hls8"]
+[ext_resource type="Script" uid="uid://bc0btcq6h0ndt" path="res://Levels/level_1.gd" id="1_f4pg2"]
 [ext_resource type="PackedScene" uid="uid://cpaiie4a57pij" path="res://Objects/HUD.tscn" id="1_rfktq"]
 [ext_resource type="TileSet" uid="uid://d2upg53hfj06h" path="res://Textures/level_tiles.tres" id="2_hbghi"]
 [ext_resource type="PackedScene" uid="uid://c735x8lpkf6dh" path="res://Objects/door.tscn" id="2_syshm"]
@@ -11,6 +12,7 @@
 [ext_resource type="Resource" uid="uid://c05fpuh33txf7" path="res://Powerups/MoonGravity.tres" id="9_xoyoh"]
 
 [node name="Level" type="Node2D"]
+script = ExtResource("1_f4pg2")
 
 [node name="Hud" parent="." instance=ExtResource("1_rfktq")]
 
@@ -80,3 +82,15 @@ powerup = ExtResource("8_xoyoh")
 position = Vector2(2, -93)
 id = "gravity_1"
 powerup = ExtResource("9_xoyoh")
+
+[node name="door2" parent="." instance=ExtResource("2_syshm")]
+position = Vector2(1143, -450)
+rotation = -1.5707964
+id = "end_lvl_1"
+locked = true
+connected_room = "res://Levels/level_3.tscn"
+
+[node name="End" type="Marker2D" parent="."]
+position = Vector2(1114, -449)
+
+[node name="Start" type="Marker2D" parent="."]

@@ -1,12 +1,14 @@
-[gd_scene load_steps=6 format=3 uid="uid://cryd5xg1i1fl2"]
+[gd_scene load_steps=7 format=3 uid="uid://cryd5xg1i1fl2"]
 
 [ext_resource type="PackedScene" uid="uid://bnqh10gubjlg2" path="res://Objects/player.tscn" id="1_135yf"]
 [ext_resource type="PackedScene" uid="uid://cpaiie4a57pij" path="res://Objects/HUD.tscn" id="1_hw7k4"]
+[ext_resource type="Script" uid="uid://box5y2otx6qmj" path="res://Levels/containment_cell.gd" id="1_q01ic"]
 [ext_resource type="TileSet" uid="uid://d2upg53hfj06h" path="res://Textures/level_tiles.tres" id="2_hw7k4"]
 [ext_resource type="PackedScene" uid="uid://c735x8lpkf6dh" path="res://Objects/door.tscn" id="3_5hdxe"]
 [ext_resource type="PackedScene" uid="uid://brgn8kq88rold" path="res://Objects/keycard.tscn" id="4_135yf"]
 
 [node name="Level" type="Node2D"]
+script = ExtResource("1_q01ic")
 
 [node name="Hud" parent="." instance=ExtResource("1_hw7k4")]
 
