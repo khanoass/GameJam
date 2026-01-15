@@ -62,7 +62,6 @@ const WALLS := {
 	"bouncy": WALL_TYPE.Bouncy,
 	"sliding": WALL_TYPE.Sliding
 }
-var _last_wall_type := WALL_TYPE.Sticky
 
 # Called by camera when hitting the player
 func die():
@@ -213,14 +212,13 @@ func dash_step(delta: float):
 
 	_on_ice_this_step = false
 	_ice_tangent = Vector2.ZERO
-	_last_wall_type = 0
 
 	while max_iters > 0 and remaining.length() > EPS:
 		var step := remaining
 		if step.length() > max_step:
 			step = step.normalized() * max_step
 
-		var collision: KinematicCollision2D = move_and_collide(step, false, 0.08, true)
+		var collision: KinematicCollision2D = move_and_collide(step, false, 0.02, true)
 		
 		if collision == null:
 			remaining -= step
@@ -245,16 +243,15 @@ func dash_step(delta: float):
 		var is_recovery := r.is_zero_approx() and collision.get_travel().is_zero_approx()
 
 		if is_recovery:
-			remaining = r
-			max_iters -= 1
-			continue
+			global_position += n * 0.5
+			remaining = Vector2.ZERO
+			break
 
 		var type := get_tile_type(collision, n)
-		_last_wall_type = type
 
 		var cont := update_wall_collision(type, n, r)
 
-		if (cont - remaining).length() < EPS:
+		if cont.length() < EPS:
 			remaining = Vector2.ZERO
 			break
 
@@ -351,8 +348,15 @@ func update_sliding(n: Vector2, r: Vector2) -> Vector2:
 		
 	if is_wall:
 		var tangent := n.orthogonal().normalized()
-		velocity = velocity.project(tangent)
-		return r.project(tangent)
+		if velocity.dot(tangent) < 0.0:
+			tangent = -tangent
+		velocity = velocity.slide(n)
+		var rr := r.slide(n)
+		if rr.is_zero_approx():
+			rr = tangent * 0.001 + n * 0.001
+		_on_ice_this_step = true
+		_ice_tangent = tangent
+		return rr
 
 	if is_ceiling:
 		if velocity.y < 0.0:
