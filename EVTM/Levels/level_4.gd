@@ -3,7 +3,7 @@ extends Node2D
 @onready var start = $Start
 @onready var end = $End
 
-const ID := 1
+const ID := 4
 
 func _ready():
 	var player := get_tree().get_first_node_in_group("player")
@@ -12,5 +12,5 @@ func _ready():
 	player.global_position = getStartPosition(GameState.came_from(ID))
 
 func getStartPosition(c: int):
-	if c == 3: return end.global_position
+	if c == 5: return end.global_position
 	return start.global_position

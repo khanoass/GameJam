@@ -65,10 +65,11 @@ var _last_wall_type := WALL_TYPE.Sticky
 # Called by camera when hitting the player
 func die():
 	dead = true
-	if is_queued_for_deletion():
-		return
 	_caught = true
 	_ring.visible = false
+	update_spot_color()
+	if is_queued_for_deletion():
+		return
 	
 	# Spawn gas at top of the screen
 	var smoke = preload("res://Objects/smoke_effect.tscn").instantiate()
@@ -95,7 +96,7 @@ func exited_turret_fov():
 func update_spot_color():
 	if !_caught:
 		sprite.modulate = Color(1,1,1,1)
-	if _turrets_seeing > 0:
+	if _turrets_seeing > 0 || dead:
 		sprite.modulate = Color(1, 0, 0, 1)
 
 func _enter_tree() -> void:
@@ -292,11 +293,13 @@ func update_wall_collision(type: WALL_TYPE, normal, remainder) -> Vector2:
 	return wall_dispatch.get(type).call()
 
 func update_sticky() -> Vector2:
+	_on_ice_this_step = false
 	velocity = Vector2.ZERO
 	_dashing = false
 	return Vector2.ZERO
 
 func update_bouncy(n, r) -> Vector2:
+	_on_ice_this_step = false
 	velocity = velocity.bounce(n) * bounce_coeff
 	if velocity.length() >= min_speed_after_bounce:
 		return Vector2.ZERO
@@ -311,11 +314,9 @@ func update_sliding(n: Vector2, r: Vector2) -> Vector2:
 	var is_ceiling := n.y > 0.6
 
 	if is_wall:
-		velocity.x = 0.0
-		var gv = Vector2(0, gravity)
+		velocity.x /= 3.0
+		var gv = Vector2(velocity.x, gravity)
 		var gdir := gv.normalized()
-		if gv.length() > 0.0:
-			gdir = Vector2.DOWN
 		return r.project(gdir)
 
 	if is_floor:

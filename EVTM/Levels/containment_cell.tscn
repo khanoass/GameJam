@@ -33,13 +33,6 @@ rotation = 1.5707964
 id = "lvl_0_2"
 connected_room = "res://Levels/level_2.tscn"
 
-[node name="door_3" parent="." instance=ExtResource("3_5hdxe")]
-position = Vector2(63.000004, -57)
-rotation = -3.1415925
-id = "lvl_0_3"
-locked = true
-connected_room = "res://Levels/player-sandbox.tscn"
-
 [node name="keypass" parent="." instance=ExtResource("4_135yf")]
 position = Vector2(-23, 30)
 id = "test_key"

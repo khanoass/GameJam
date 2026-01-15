@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://byaocesfunkuf"]
+[gd_scene load_steps=10 format=3 uid="uid://byaocesfunkuf"]
 
 [ext_resource type="TileSet" uid="uid://d2upg53hfj06h" path="res://Textures/level_tiles.tres" id="1_arsda"]
 [ext_resource type="PackedScene" uid="uid://cpaiie4a57pij" path="res://Objects/HUD.tscn" id="1_bcgyv"]
@@ -6,6 +6,9 @@
 [ext_resource type="PackedScene" uid="uid://c735x8lpkf6dh" path="res://Objects/door.tscn" id="2_bcgyv"]
 [ext_resource type="PackedScene" uid="uid://bnqh10gubjlg2" path="res://Objects/player.tscn" id="2_dgq3b"]
 [ext_resource type="PackedScene" uid="uid://cn2shtf45floc" path="res://Objects/camera.tscn" id="3_bcgyv"]
+[ext_resource type="PackedScene" uid="uid://bmkqss82rugvr" path="res://Powerups/powerup_pickup.tscn" id="7_pml6m"]
+[ext_resource type="Resource" uid="uid://3832k8yyftae" path="res://Powerups/SpeedBoost.tres" id="8_vltsr"]
+[ext_resource type="PackedScene" uid="uid://ct7fclkjykqj0" path="res://Objects/scientist.tscn" id="9_vltsr"]
 
 [node name="Level" type="Node2D"]
 script = ExtResource("1_fbld2")
@@ -56,3 +59,12 @@ position = Vector2(839, -580)
 
 [node name="Start" type="Marker2D" parent="."]
 position = Vector2(2, -2)
+
+[node name="SpeedBoost" parent="." instance=ExtResource("7_pml6m")]
+position = Vector2(-82, -529)
+id = "speed_1"
+powerup = ExtResource("8_vltsr")
+
+[node name="Scientist" parent="." instance=ExtResource("9_vltsr")]
+position = Vector2(921, -577)
+dialogue = ["WHAT THE FUCK IS THAT?!", "Don't go through the door", "I'm begging you", "STOP!!"]

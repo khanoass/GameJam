@@ -10,6 +10,8 @@ var collected_powerups := {}
 var active_powerups: Array[Powerup]
 signal powerups_state_changed(new_state: Array[Powerup])
 
+var came_from_lvl := 0
+
 # Keypasses
 func keypass_count() -> int:
 	return active_keypasses
@@ -60,3 +62,9 @@ func powerup_is_collected(id: String) -> bool:
 
 func powerup_is_active(powerup: Powerup) -> bool:
 	return active_powerups.has(powerup)
+	
+# Came from
+func came_from(arrived_at: int) -> int:
+	var temp = came_from_lvl
+	came_from_lvl = arrived_at
+	return temp

@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://eefrahvu6g37"]
+[gd_scene load_steps=10 format=3 uid="uid://eefrahvu6g37"]
 
 [ext_resource type="PackedScene" uid="uid://bnqh10gubjlg2" path="res://Objects/player.tscn" id="1_3hls8"]
 [ext_resource type="Script" uid="uid://bc0btcq6h0ndt" path="res://Levels/level_1.gd" id="1_f4pg2"]
@@ -8,7 +8,6 @@
 [ext_resource type="PackedScene" uid="uid://cn2shtf45floc" path="res://Objects/camera.tscn" id="3_hn12h"]
 [ext_resource type="PackedScene" uid="uid://jqgqn3cbd6ae" path="res://Objects/security_guard.tscn" id="5_syshm"]
 [ext_resource type="PackedScene" uid="uid://bmkqss82rugvr" path="res://Powerups/powerup_pickup.tscn" id="7_77x7w"]
-[ext_resource type="Resource" uid="uid://3832k8yyftae" path="res://Powerups/SpeedBoost.tres" id="8_xoyoh"]
 [ext_resource type="Resource" uid="uid://c05fpuh33txf7" path="res://Powerups/MoonGravity.tres" id="9_xoyoh"]
 
 [node name="Level" type="Node2D"]
@@ -28,7 +27,7 @@ id = "lvl_1_1"
 connected_room = "res://Levels/containment_cell.tscn"
 
 [node name="player" parent="." instance=ExtResource("1_3hls8")]
-position = Vector2(23, -8)
+position = Vector2(-2, -17)
 
 [node name="Turret" parent="." instance=ExtResource("3_hn12h")]
 position = Vector2(39, -122)
@@ -73,13 +72,8 @@ rotation_clockwise = false
 position = Vector2(683, -321)
 can_look_up = true
 
-[node name="SpeedBoost" parent="." instance=ExtResource("7_77x7w")]
-position = Vector2(317, -189)
-id = "speed_1"
-powerup = ExtResource("8_xoyoh")
-
 [node name="MoonGravity" parent="." instance=ExtResource("7_77x7w")]
-position = Vector2(2, -93)
+position = Vector2(496, -828)
 id = "gravity_1"
 powerup = ExtResource("9_xoyoh")
 
