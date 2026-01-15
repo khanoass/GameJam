@@ -23,6 +23,8 @@ var _attached_offset: Vector2 = Vector2.ZERO
 
 @export var ring_path: String = "ChargeRing"
 @export var ring_block_check_dist := 24.0
+@export var ray_side_offset := 8.0
+@export var ray_forward_offset := 2.0
 
 @onready var sprite := $AnimatedSprite2D
 
@@ -82,9 +84,19 @@ func _is_aim_blocked(aim_dir: Vector2) -> bool:
 	if aim_dir == Vector2.ZERO:
 		return true
 
-	var from := global_position
-	var to := from + aim_dir.normalized() * ring_block_check_dist
+	var dir := aim_dir.normalized()
+	var perp := Vector2(-dir.y, dir.x)  # 90° rotated
 
+	# Two start points (left/right "corners" in the aiming direction)
+	var start_a := global_position + perp * ray_side_offset + dir * ray_forward_offset
+	var start_b := global_position - perp * ray_side_offset + dir * ray_forward_offset
+
+	var end_a := start_a + dir * ring_block_check_dist
+	var end_b := start_b + dir * ring_block_check_dist
+
+	return _ray_hits_wall(start_a, end_a) or _ray_hits_wall(start_b, end_b)
+
+func _ray_hits_wall(from: Vector2, to: Vector2) -> bool:
 	var q := PhysicsRayQueryParameters2D.create(from, to)
 	q.exclude = [self]
 	q.collide_with_areas = false
@@ -94,8 +106,9 @@ func _is_aim_blocked(aim_dir: Vector2) -> bool:
 	if hit.is_empty():
 		return false
 
-	# consider tilemap as blocking (adjust if your walls are StaticBody2D etc.)
+	# If you only want TileMap walls:
 	return hit["collider"] is TileMap
+	# If your walls are StaticBody2D etc., use: return true
 
 # Called by camera when hitting the player
 func die():
