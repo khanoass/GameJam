@@ -208,11 +208,12 @@ func dash_step(delta: float):
 	velocity += Vector2(0, gravity) * delta
 
 	var remaining := velocity * delta
-	var max_iters := 8
-	var max_step := 16.0
+	var max_iters := 12
+	var max_step := 8.0
 
 	_on_ice_this_step = false
 	_ice_tangent = Vector2.ZERO
+	_last_wall_type = 0
 
 	while max_iters > 0 and remaining.length() > EPS:
 		var step := remaining
@@ -276,25 +277,22 @@ func dash_step(delta: float):
 
 func get_tile_type(collision: KinematicCollision2D, normal: Vector2) -> WALL_TYPE:
 	var tmap := collision.get_collider() as TileMap
-	var def := _last_wall_type
+	var def := WALL_TYPE.Sticky
 	if tmap == null:
 		return def
 
 	var layer := 0
-	var probe := collision.get_position() - normal * 0.25
+	var probe := collision.get_position() - normal
 	var coords := tmap.local_to_map(tmap.to_local(probe))
-	var src := tmap.get_cell_source_id(layer, coords)
-	if src == -1:
-		return def
 
-	var ac := tmap.get_cell_atlas_coords(layer, coords)
-	var alt := tmap.get_cell_alternative_tile(layer, coords)
-	var data := tmap.tile_set.get_source(src).get_tile_data(ac, alt) as TileData
+	var data := tmap.get_cell_tile_data(layer, coords)
 	if data == null:
 		return def
 
 	var tt = data.get_custom_data("wall_type")
-	if tt is String and WALLS.has(tt):
+	if tt is StringName:
+		tt = String(tt)
+	if WALLS.has(tt):
 		return WALLS[tt]
 
 	return def
@@ -324,15 +322,9 @@ func update_bouncy(n, r) -> Vector2:
 	return r.bounce(n)
 	
 func update_sliding(n: Vector2, r: Vector2) -> Vector2:
-	var is_floor := n.y < -0.6
-	var is_wall := absf(n.x) > 0.6
+	var is_floor := bool(n.y < 0.0 and abs(n.y) >= abs(n.x))
+	var is_wall := bool(abs(n.x) > abs(n.y))
 	var is_ceiling := n.y > 0.6
-
-	if is_wall:
-		velocity.x /= 3.0
-		var gv = Vector2(velocity.x, gravity)
-		var gdir := gv.normalized()
-		return r.project(gdir)
 
 	if is_floor:
 		var tangent := n.orthogonal().normalized()
@@ -356,6 +348,11 @@ func update_sliding(n: Vector2, r: Vector2) -> Vector2:
 		_on_ice_this_step = true
 		_ice_tangent = tangent
 		return r_tangent
+		
+	if is_wall:
+		var tangent := n.orthogonal().normalized()
+		velocity = velocity.project(tangent)
+		return r.project(tangent)
 
 	if is_ceiling:
 		if velocity.y < 0.0:
@@ -368,7 +365,6 @@ func update_sliding(n: Vector2, r: Vector2) -> Vector2:
 
 func get_current_velocity() -> Vector2:
 	return velocity
-
 
 func _handle_rigidbody_collision(collision: KinematicCollision2D, prev_velocity: Vector2) -> void:
 	var body := collision.get_collider() as RigidBody2D

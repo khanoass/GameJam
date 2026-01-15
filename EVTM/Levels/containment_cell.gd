@@ -1,7 +1,6 @@
 extends Node2D
 
+const ID = 0
+
 func _ready():
-	var player := get_tree().get_first_node_in_group("player")
-	if !player:
-		return false
-	player.camefrom = 0
+	GameState.came_from(ID)
