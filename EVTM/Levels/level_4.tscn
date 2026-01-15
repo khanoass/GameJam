@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://ctl4s3x12wg1y"]
+[gd_scene load_steps=11 format=3 uid="uid://ctl4s3x12wg1y"]
 
 [ext_resource type="TileSet" uid="uid://d2upg53hfj06h" path="res://Textures/level_tiles.tres" id="1_ftfcu"]
 [ext_resource type="Script" uid="uid://bi6dqtbu46jog" path="res://Levels/level_4.gd" id="1_t60mx"]
@@ -8,6 +8,8 @@
 [ext_resource type="PackedScene" uid="uid://brgn8kq88rold" path="res://Objects/keycard.tscn" id="5_ujo87"]
 [ext_resource type="PackedScene" uid="uid://ct7fclkjykqj0" path="res://Objects/scientist.tscn" id="6_hvgxt"]
 [ext_resource type="PackedScene" uid="uid://jqgqn3cbd6ae" path="res://Objects/security_guard.tscn" id="7_waaef"]
+[ext_resource type="PackedScene" uid="uid://btnke3vt7ooru" path="res://Objects/star.tscn" id="9_ben3k"]
+[ext_resource type="PackedScene" uid="uid://cn2shtf45floc" path="res://Objects/camera.tscn" id="10_77xid"]
 
 [node name="Level4" type="Node2D"]
 script = ExtResource("1_t60mx")
@@ -27,20 +29,31 @@ rotation = 1.5707964
 id = "start_lvl_4"
 connected_room = "res://Levels/level_2.tscn"
 
+[node name="keypass3" parent="." instance=ExtResource("5_ujo87")]
+position = Vector2(-175, -400)
+id = "test_key"
+
 [node name="door" parent="." instance=ExtResource("2_e78ah")]
 position = Vector2(-456, -327)
 id = "end_lvl_4"
 connected_room = "res://Levels/containment_cell.tscn"
-
-[node name="keypass" parent="door" instance=ExtResource("5_ujo87")]
-position = Vector2(281, -73)
-id = "test_key"
 
 [node name="End" type="Marker2D" parent="."]
 position = Vector2(-419, -355)
 
 [node name="player" parent="." instance=ExtResource("3_nsqb1")]
 position = Vector2(18, -201)
+gravity = 1200.0
+charge_time = 0.8
+player_mass = 1.0
+max_jump_speed = -600.0
+min_jump_speed = -300.0
+bounce_coeff = 0.9
+dash_decay = 2.0
+min_speed_after_bounce = 60.0
+slide_keep_ratio = 0.85
+slide_decay = 0.0
+ring_path = "ChargeRing"
 
 [node name="Start" type="Marker2D" parent="."]
 position = Vector2(14, -223)
@@ -58,3 +71,15 @@ position = Vector2(412, 126)
 
 [node name="security_guard" parent="." instance=ExtResource("7_waaef")]
 position = Vector2(77, 126)
+
+[node name="Star" parent="." instance=ExtResource("9_ben3k")]
+position = Vector2(304, -75)
+id = "s4"
+
+[node name="Camera" parent="." instance=ExtResource("10_77xid")]
+position = Vector2(-58, -26)
+rotation = -1.150172
+arc_degrees = 15.0
+reach = 500.0
+rotating = true
+rotation_clockwise = false

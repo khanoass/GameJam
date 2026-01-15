@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://byaocesfunkuf"]
+[gd_scene load_steps=11 format=3 uid="uid://byaocesfunkuf"]
 
 [ext_resource type="TileSet" uid="uid://d2upg53hfj06h" path="res://Textures/level_tiles.tres" id="1_arsda"]
 [ext_resource type="PackedScene" uid="uid://cpaiie4a57pij" path="res://Objects/HUD.tscn" id="1_bcgyv"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://bmkqss82rugvr" path="res://Powerups/powerup_pickup.tscn" id="7_pml6m"]
 [ext_resource type="Resource" uid="uid://3832k8yyftae" path="res://Powerups/SpeedBoost.tres" id="8_vltsr"]
 [ext_resource type="PackedScene" uid="uid://ct7fclkjykqj0" path="res://Objects/scientist.tscn" id="9_vltsr"]
+[ext_resource type="PackedScene" uid="uid://btnke3vt7ooru" path="res://Objects/star.tscn" id="10_rp5ft"]
 
 [node name="Level" type="Node2D"]
 script = ExtResource("1_fbld2")
@@ -27,6 +28,17 @@ connected_room = "res://Levels/containment_cell.tscn"
 
 [node name="player" parent="." instance=ExtResource("2_dgq3b")]
 position = Vector2(34, -51)
+gravity = 1200.0
+charge_time = 0.8
+player_mass = 1.0
+max_jump_speed = -600.0
+min_jump_speed = -300.0
+bounce_coeff = 0.9
+dash_decay = 2.0
+min_speed_after_bounce = 60.0
+slide_keep_ratio = 0.85
+slide_decay = 0.0
+ring_path = "ChargeRing"
 
 [node name="Start Turret" parent="." instance=ExtResource("3_bcgyv")]
 position = Vector2(-14, -138)
@@ -68,3 +80,7 @@ powerup = ExtResource("8_vltsr")
 [node name="Scientist" parent="." instance=ExtResource("9_vltsr")]
 position = Vector2(921, -577)
 dialogue = ["WHAT THE FUCK IS THAT?!", "Don't go through the door", "I'm begging you", "STOP!!"]
+
+[node name="Star" parent="." instance=ExtResource("10_rp5ft")]
+position = Vector2(584, -902)
+id = "s3"

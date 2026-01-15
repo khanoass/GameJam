@@ -83,7 +83,7 @@ func die():
 	
 	await get_tree().create_timer(2.5).timeout
 	
-	# Back to containment
+	# Back to spawn point
 	get_tree().change_scene_to_file("res://Levels/containment_cell.tscn")
 
 func entered_turret_fov():

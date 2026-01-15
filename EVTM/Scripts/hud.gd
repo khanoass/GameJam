@@ -1,6 +1,7 @@
 extends CanvasLayer
 
 @onready var keyLabel: Label = $KeypassContainer/PanelContainer/HBoxContainer/Label
+@onready var starLabel: Label = $StarContainer/PanelContainer/HBoxContainer/Label
 @onready var powerupsVBox: VBoxContainer = $PowerupsContainer/PanelContainer/VBoxContainer
 @onready var powerupsContainer: MarginContainer = $PowerupsContainer
 
@@ -9,6 +10,8 @@ func _ready() -> void:
 	GameState.keypass_count_changed.connect(update_keypass_label)
 	update_powerups(GameState.powerups_state())
 	GameState.powerups_state_changed.connect(update_powerups)
+	update_stars(GameState.stars_count)
+	GameState.stars_count_changed.connect(update_stars)
 
 func update_keypass_label(count: int) -> void:
 	keyLabel.text = "%d" % count
@@ -24,6 +27,9 @@ func update_powerups(powerups: Array[Powerup]) -> void:
 
 	for p in powerups:
 		powerupsVBox.add_child(make_powerup_row(p))
+
+func update_stars(stars: int) -> void:
+	keyLabel.text = "%d" % stars
 
 func make_powerup_row(p: Powerup) -> HBoxContainer:
 	var row := HBoxContainer.new()
