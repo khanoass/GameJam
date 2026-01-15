@@ -29,7 +29,7 @@ func update_powerups(powerups: Array[Powerup]) -> void:
 		powerupsVBox.add_child(make_powerup_row(p))
 
 func update_stars(stars: int) -> void:
-	keyLabel.text = "%d" % stars
+	starLabel.text = "%d" % stars
 
 func make_powerup_row(p: Powerup) -> HBoxContainer:
 	var row := HBoxContainer.new()

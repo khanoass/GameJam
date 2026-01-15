@@ -26,6 +26,8 @@ var _attached_offset: Vector2 = Vector2.ZERO
 @onready var sprite := $AnimatedSprite2D
 
 @onready var PauseMenu = preload("res://Levels/pause_menu.tscn")
+@onready var DeadOverlay = preload("res://Levels/dead_overlay.tscn")
+var overlayOpacity := 0
 
 var _charging: bool = false
 var _dashing: bool = true
@@ -81,7 +83,10 @@ func die():
 	var top_center = camera - Vector2(0, viewport_size.y / 2)
 	smoke.global_position = top_center + Vector2(viewport_size.x / 2, 0)
 	
-	await get_tree().create_timer(2.5).timeout
+	var deado := DeadOverlay.instantiate()
+	add_child(deado)
+	
+	await get_tree().create_timer(4).timeout
 	
 	# Back to spawn point
 	get_tree().change_scene_to_file("res://Levels/containment_cell.tscn")

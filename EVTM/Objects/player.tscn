@@ -25,17 +25,6 @@ animations = [{
 
 [node name="player" type="CharacterBody2D" groups=["player"]]
 script = ExtResource("1_4flbx")
-gravity = null
-charge_time = null
-player_mass = null
-max_jump_speed = null
-min_jump_speed = null
-bounce_coeff = null
-dash_decay = null
-min_speed_after_bounce = null
-slide_keep_ratio = null
-slide_decay = null
-ring_path = null
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_sh265")
