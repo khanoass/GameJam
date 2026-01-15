@@ -8,6 +8,7 @@ var startY: float
 var elapsedTime: float = 0.0
 
 func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_PAUSABLE
 	# Id must be set & can't already be picked up
 	if id == "" || GameState.keypass_is_collected(id):
 		queue_free()

@@ -12,6 +12,7 @@ var start_y: float
 var elapsed_time := 0.0
 
 func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_PAUSABLE
 	if id == "" or powerup == null or GameState.powerup_is_collected(id):
 		queue_free()
 		return

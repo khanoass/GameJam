@@ -27,6 +27,7 @@ var debug_color: Color = Color.from_rgba8(255, 255, 0, 150)
 var seeing_player := false
 
 func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_PAUSABLE
 	global_rotation += deg_to_rad(offset_degrees)
 	build_fov()
 	

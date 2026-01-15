@@ -3,6 +3,9 @@ extends Area2D
 @export var speed: float = 200
 var direction: Vector2 = Vector2.RIGHT
 
+func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_PAUSABLE
+
 func _process(delta: float) -> void:
 	position += direction * speed * delta
 

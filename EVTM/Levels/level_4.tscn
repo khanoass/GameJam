@@ -30,7 +30,11 @@ connected_room = "res://Levels/level_2.tscn"
 [node name="door" parent="." instance=ExtResource("2_e78ah")]
 position = Vector2(-456, -327)
 id = "end_lvl_4"
-connected_room = "res://Levels/player-sandbox.tscn"
+connected_room = "res://Levels/containment_cell.tscn"
+
+[node name="keypass" parent="door" instance=ExtResource("5_ujo87")]
+position = Vector2(281, -73)
+id = "test_key"
 
 [node name="End" type="Marker2D" parent="."]
 position = Vector2(-419, -355)

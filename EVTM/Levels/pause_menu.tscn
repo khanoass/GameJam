@@ -1,0 +1,41 @@
+[gd_scene load_steps=4 format=3 uid="uid://ddwf7rvpoti6w"]
+
+[ext_resource type="Script" uid="uid://qh76fgt43ykj" path="res://Levels/pause_menu.gd" id="1_fkhs8"]
+[ext_resource type="FontFile" uid="uid://gam1gsg45vi5" path="res://Fonts/WastedPersonalUseRegular-WyegG.ttf" id="3_eeiqt"]
+[ext_resource type="FontFile" uid="uid://h7ss4i8ejtjb" path="res://Fonts/zig.ttf" id="4_l5eag"]
+
+[node name="PauseMenu" type="CanvasLayer"]
+script = ExtResource("1_fkhs8")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+offset_right = 1150.0
+offset_bottom = 649.0
+color = Color(0.15294118, 0.32156864, 0.43137255, 0.39215687)
+
+[node name="RichTextLabel" type="RichTextLabel" parent="."]
+offset_left = -1.0
+offset_top = -1.0
+offset_right = 1152.0
+offset_bottom = 229.0
+theme_override_fonts/normal_font = ExtResource("3_eeiqt")
+theme_override_font_sizes/normal_font_size = 100
+text = "EVTM"
+horizontal_alignment = 1
+
+[node name="Resume" type="Button" parent="."]
+offset_left = 476.0
+offset_top = 314.0
+offset_right = 666.0
+offset_bottom = 386.0
+theme_override_fonts/font = ExtResource("4_l5eag")
+theme_override_font_sizes/font_size = 31
+text = "Resume"
+
+[node name="Quit" type="Button" parent="."]
+offset_left = 476.0
+offset_top = 428.0
+offset_right = 666.0
+offset_bottom = 500.0
+theme_override_fonts/font = ExtResource("4_l5eag")
+theme_override_font_sizes/font_size = 31
+text = "Quit"

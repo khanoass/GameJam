@@ -4,6 +4,7 @@ extends RigidBody2D
 @export var speed: float = 0.0
 
 func _ready():
+	process_mode = Node.PROCESS_MODE_PAUSABLE
 	var m := PhysicsMaterial.new()
 	m.bounce = 1.0
 	m.friction = 0.0

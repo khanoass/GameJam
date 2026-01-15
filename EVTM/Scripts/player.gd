@@ -25,6 +25,8 @@ var _attached_offset: Vector2 = Vector2.ZERO
 
 @onready var sprite := $AnimatedSprite2D
 
+@onready var PauseMenu = preload("res://Levels/pause_menu.tscn")
+
 var _charging: bool = false
 var _dashing: bool = true
 var _charge_elapsed: float = 0.0
@@ -103,6 +105,7 @@ func _enter_tree() -> void:
 	add_to_group("player", true)
 
 func _ready():
+	process_mode = Node.PROCESS_MODE_PAUSABLE
 	add_to_group("player")
 	_ring = get_node_or_null(ring_path)
 	if _ring:
@@ -116,7 +119,19 @@ func _ready():
 func update_powerups(powerups: Array[Powerup]):
 	for p in powerups:
 		p.apply(self)
-			
+		
+func _process(delta: float) -> void:
+	if Input.is_action_pressed("pause"):
+		toggle_pause()
+
+func toggle_pause():
+	if get_tree().paused:
+		get_tree().paused = false
+	else:
+		get_tree().paused = true
+		var menu := PauseMenu.instantiate()
+		add_child(menu)
+
 func _physics_process(delta: float):
 	if _attached_body != null:
 		_update_attached_state(delta)

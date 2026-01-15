@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://eefrahvu6g37"]
+[gd_scene load_steps=9 format=3 uid="uid://eefrahvu6g37"]
 
 [ext_resource type="PackedScene" uid="uid://bnqh10gubjlg2" path="res://Objects/player.tscn" id="1_3hls8"]
 [ext_resource type="Script" uid="uid://bc0btcq6h0ndt" path="res://Levels/level_1.gd" id="1_f4pg2"]
@@ -7,8 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://c735x8lpkf6dh" path="res://Objects/door.tscn" id="2_syshm"]
 [ext_resource type="PackedScene" uid="uid://cn2shtf45floc" path="res://Objects/camera.tscn" id="3_hn12h"]
 [ext_resource type="PackedScene" uid="uid://jqgqn3cbd6ae" path="res://Objects/security_guard.tscn" id="5_syshm"]
-[ext_resource type="PackedScene" uid="uid://bmkqss82rugvr" path="res://Powerups/powerup_pickup.tscn" id="7_77x7w"]
-[ext_resource type="Resource" uid="uid://c05fpuh33txf7" path="res://Powerups/MoonGravity.tres" id="9_xoyoh"]
+[ext_resource type="PackedScene" uid="uid://brgn8kq88rold" path="res://Objects/keycard.tscn" id="8_77x7w"]
 
 [node name="Level" type="Node2D"]
 script = ExtResource("1_f4pg2")
@@ -23,7 +22,7 @@ layer_0/tile_data = PackedInt32Array(131067, 0, 0, 65531, 0, 0, -5, 0, 0, -65541
 
 [node name="door" parent="." instance=ExtResource("2_syshm")]
 position = Vector2(-33, 7)
-id = "lvl_1_1"
+id = "start_lvl_1"
 connected_room = "res://Levels/containment_cell.tscn"
 
 [node name="player" parent="." instance=ExtResource("1_3hls8")]
@@ -72,17 +71,17 @@ rotation_clockwise = false
 position = Vector2(683, -321)
 can_look_up = true
 
-[node name="MoonGravity" parent="." instance=ExtResource("7_77x7w")]
-position = Vector2(496, -828)
-id = "gravity_1"
-powerup = ExtResource("9_xoyoh")
-
 [node name="door2" parent="." instance=ExtResource("2_syshm")]
 position = Vector2(1143, -450)
 rotation = -1.5707964
 id = "end_lvl_1"
 locked = true
 connected_room = "res://Levels/level_3.tscn"
+
+[node name="keypass" parent="door2" instance=ExtResource("8_77x7w")]
+position = Vector2(303.00006, -784)
+rotation = 1.5707964
+id = "test_key"
 
 [node name="End" type="Marker2D" parent="."]
 position = Vector2(1114, -449)

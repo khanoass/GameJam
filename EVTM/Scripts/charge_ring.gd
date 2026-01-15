@@ -31,6 +31,7 @@ var _value: float = 0.0  # 0..1
 var _jump_arrow: Node2D
 
 func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_PAUSABLE
 	_jump_arrow = get_node_or_null(jump_arrow_path)
 
 func set_value(p: float) -> void:
