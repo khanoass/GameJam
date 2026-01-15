@@ -22,8 +22,13 @@ var _attached_offset: Vector2 = Vector2.ZERO
 @export var slide_decay := 0.0
 
 @export var ring_path: String = "ChargeRing"
+@export var ring_block_check_dist := 24.0
 
 @onready var sprite := $AnimatedSprite2D
+
+@export var arrow_color: Color = Color(0.3, 0.8, 1.0)
+@export var blocked_arrow_color: Color = Color(1.0, 0.2, 0.2, 1.0)
+@onready var arrow := $jump_direction_arrow
 
 @onready var PauseMenu = preload("res://Levels/pause_menu.tscn")
 @onready var DeadOverlay = preload("res://Levels/dead_overlay.tscn")
@@ -64,6 +69,33 @@ const WALLS := {
 	"bouncy": WALL_TYPE.Bouncy,
 	"sliding": WALL_TYPE.Sliding
 }
+
+func _ring_set_blocked(blocked: bool) -> void:
+	if _ring and _ring.has_method("set_blocked"):
+		_ring.call("set_blocked", blocked)
+	if blocked:
+		arrow.color = blocked_arrow_color
+	else:
+		arrow.color = arrow_color
+
+func _is_aim_blocked(aim_dir: Vector2) -> bool:
+	if aim_dir == Vector2.ZERO:
+		return true
+
+	var from := global_position
+	var to := from + aim_dir.normalized() * ring_block_check_dist
+
+	var q := PhysicsRayQueryParameters2D.create(from, to)
+	q.exclude = [self]
+	q.collide_with_areas = false
+	q.collide_with_bodies = true
+
+	var hit := get_world_2d().direct_space_state.intersect_ray(q)
+	if hit.is_empty():
+		return false
+
+	# consider tilemap as blocking (adjust if your walls are StaticBody2D etc.)
+	return hit["collider"] is TileMap
 
 # Called by camera when hitting the player
 func die():
@@ -201,12 +233,16 @@ func check_for_charge(delta: float):
 		_charge_elapsed = min(_charge_elapsed + delta, charge_time)
 		var t: float = _charge_elapsed / max(charge_time, 0.0001)
 		update_ring(t)
+		var aim_dir := -Vector2((global_position - get_child(3).global_position).normalized())
+		var blocked := _is_aim_blocked(aim_dir)
+		_ring_set_blocked(blocked)
 
 	# Bei Release: Sprung auslösen
 	if _charging and Input.is_action_just_released("jump"):
 		apply_dash()
 		_charging = false
 		hide_ring()
+		_ring_set_blocked(false)
 	
 func dash_step(delta: float):
 	velocity += Vector2(0, gravity) * delta

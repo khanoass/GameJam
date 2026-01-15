@@ -126,7 +126,10 @@ func update_fov() -> void:
 
 # Updates timer depending on if the player is seen
 func update_detection(seen: bool) -> void:
-	var p := get_tree().get_nodes_in_group("player")[0]
+	var pl := get_tree().get_nodes_in_group("player")
+	if pl == null || pl.size() == 0:
+		return
+	var p := pl[0]
 	
 	if seen:
 		if !seeing_player:

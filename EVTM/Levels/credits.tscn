@@ -1,0 +1,53 @@
+[gd_scene load_steps=6 format=3 uid="uid://bjh1gqcclbtae"]
+
+[ext_resource type="FontFile" uid="uid://gam1gsg45vi5" path="res://Fonts/WastedPersonalUseRegular-WyegG.ttf" id="1_mbqqj"]
+[ext_resource type="Script" uid="uid://butnvejlsgcgn" path="res://Levels/credits.gd" id="1_mn1va"]
+[ext_resource type="FontFile" uid="uid://h7ss4i8ejtjb" path="res://Fonts/zig.ttf" id="2_mn1va"]
+
+[sub_resource type="Gradient" id="Gradient_4lsx2"]
+colors = PackedColorArray(0.53618634, 0.7432568, 0.8008097, 1, 0.8484907, 0.8594076, 0.56464845, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_7qx3r"]
+gradient = SubResource("Gradient_4lsx2")
+fill_from = Vector2(0.43589744, 0.5897436)
+
+[node name="Credits" type="CanvasLayer"]
+script = ExtResource("1_mn1va")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+offset_right = 1151.0
+offset_bottom = 650.0
+texture = SubResource("GradientTexture2D_7qx3r")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="."]
+offset_left = -1.0
+offset_top = -1.0
+offset_right = 1152.0
+offset_bottom = 229.0
+theme_override_fonts/normal_font = ExtResource("1_mbqqj")
+theme_override_font_sizes/normal_font_size = 100
+text = "Credits"
+horizontal_alignment = 1
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="."]
+offset_left = -2.0
+offset_top = 172.0
+offset_right = 1151.0
+offset_bottom = 516.0
+theme_override_fonts/normal_font = ExtResource("1_mbqqj")
+theme_override_font_sizes/normal_font_size = 40
+text = "Game made for the \"Gamedev\" 
+module of the HSLU, MMXXVI
+
+by:
+Rafael Félix, Valentin Vollenweider & Anthony Wernli"
+horizontal_alignment = 1
+
+[node name="Back" type="Button" parent="."]
+offset_left = 499.0
+offset_top = 541.0
+offset_right = 649.0
+offset_bottom = 594.0
+theme_override_fonts/font = ExtResource("2_mn1va")
+theme_override_font_sizes/font_size = 20
+text = "Back"
