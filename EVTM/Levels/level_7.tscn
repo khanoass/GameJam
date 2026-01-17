@@ -24,7 +24,7 @@ layer_0/tile_data = PackedInt32Array(-786457, 196608, 0, -786456, 196608, 0, -78
 
 [node name="EndDoor" parent="." instance=ExtResource("4_sdkrb")]
 position = Vector2(1200, -1456)
-rotation = 1.5707964
+rotation = -1.5707964
 id = "end_lvl_7"
 connected_room = "res://Levels/level_3.tscn"
 
@@ -45,6 +45,7 @@ position = Vector2(-234, -62)
 
 [node name="Camera" parent="." instance=ExtResource("6_6yfys")]
 position = Vector2(334, -536)
+ray_density = 4.0
 reach = 400.0
 offset_degrees = 90.0
 rotating = true
