@@ -10,7 +10,7 @@ colors = PackedColorArray(0.19512194, 0.19512194, 0.19512194, 1, 1, 1, 1, 1)
 script = ExtResource("1_scv78")
 
 [node name="CPUParticles2D" type="CPUParticles2D" parent="."]
-amount = 15000
+amount = 2000
 lifetime = 2.5
 speed_scale = 0.6
 explosiveness = 0.01
