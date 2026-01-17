@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dahgqti6ic6as"
-path="res://.godot/imported/speed_boost.png-c70074deb819d29a595593a78121b5ff.ctex"
+path="res://.godot/imported/speed_boost.png-3360448a967d770e56e85e566adb5737.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://textures/speed_boost.png"
-dest_files=["res://.godot/imported/speed_boost.png-c70074deb819d29a595593a78121b5ff.ctex"]
+source_file="res://Textures/speed_boost.png"
+dest_files=["res://.godot/imported/speed_boost.png-3360448a967d770e56e85e566adb5737.ctex"]
 
 [params]
 

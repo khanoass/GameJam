@@ -29,7 +29,7 @@ id = "end_lvl_8"
 connected_room = "res://Levels/level_9.tscn"
 
 [node name="StartDoor" parent="." instance=ExtResource("4_tnoys")]
-position = Vector2(1054, -143)
+position = Vector2(1057, -143)
 rotation = -1.5707964
 id = "start_lvl_8"
 connected_room = "res://Levels/level_5.tscn"
