@@ -1,6 +1,6 @@
 [gd_scene load_steps=10 format=3 uid="uid://doyu814w6n7wc"]
 
-[ext_resource type="Script" uid="uid://dal27a4dbdbnc" path="res://Levels/level_template.gd" id="1_nvn4y"]
+[ext_resource type="Script" uid="uid://c77yegnbpbdvg" path="res://Levels/level_8.gd" id="1_6u2hd"]
 [ext_resource type="PackedScene" uid="uid://cpaiie4a57pij" path="res://Objects/HUD.tscn" id="2_ruove"]
 [ext_resource type="TileSet" uid="uid://d2upg53hfj06h" path="res://Textures/level_tiles.tres" id="3_6uevo"]
 [ext_resource type="PackedScene" uid="uid://c735x8lpkf6dh" path="res://Objects/door.tscn" id="4_tnoys"]
@@ -10,8 +10,8 @@
 [ext_resource type="PackedScene" uid="uid://ct7fclkjykqj0" path="res://Objects/scientist.tscn" id="7_kjt6y"]
 [ext_resource type="PackedScene" uid="uid://btnke3vt7ooru" path="res://Objects/star.tscn" id="8_6u2hd"]
 
-[node name="LevelTemplate" type="Node2D"]
-script = ExtResource("1_nvn4y")
+[node name="Level8" type="Node2D"]
+script = ExtResource("1_6u2hd")
 
 [node name="Hud" parent="." instance=ExtResource("2_ruove")]
 position = Vector2(4, 0)
