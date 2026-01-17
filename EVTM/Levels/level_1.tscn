@@ -1,6 +1,5 @@
-[gd_scene load_steps=10 format=3 uid="uid://eefrahvu6g37"]
+[gd_scene load_steps=9 format=3 uid="uid://eefrahvu6g37"]
 
-[ext_resource type="PackedScene" uid="uid://bnqh10gubjlg2" path="res://Objects/player.tscn" id="1_3hls8"]
 [ext_resource type="Script" uid="uid://bc0btcq6h0ndt" path="res://Levels/level_1.gd" id="1_f4pg2"]
 [ext_resource type="PackedScene" uid="uid://cpaiie4a57pij" path="res://Objects/HUD.tscn" id="1_rfktq"]
 [ext_resource type="TileSet" uid="uid://d2upg53hfj06h" path="res://Textures/level_tiles.tres" id="2_hbghi"]
@@ -10,7 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://brgn8kq88rold" path="res://Objects/keycard.tscn" id="8_77x7w"]
 [ext_resource type="PackedScene" uid="uid://btnke3vt7ooru" path="res://Objects/star.tscn" id="9_xoyoh"]
 
-[node name="Level" type="Node2D"]
+[node name="Level1" type="Node2D"]
 script = ExtResource("1_f4pg2")
 
 [node name="Hud" parent="." instance=ExtResource("1_rfktq")]
@@ -25,9 +24,6 @@ layer_0/tile_data = PackedInt32Array(131067, 0, 0, 65531, 0, 0, -5, 0, 0, -65541
 position = Vector2(-33, 7)
 id = "start_lvl_1"
 connected_room = "res://Levels/containment_cell.tscn"
-
-[node name="player" parent="." instance=ExtResource("1_3hls8")]
-position = Vector2(-2, -17)
 
 [node name="Turret" parent="." instance=ExtResource("3_hn12h")]
 position = Vector2(39, -122)
@@ -68,7 +64,7 @@ position = Vector2(919, -698)
 rotating = true
 rotation_clockwise = false
 
-[node name="CharacterBody2D" parent="." instance=ExtResource("5_syshm")]
+[node name="guard" parent="." instance=ExtResource("5_syshm")]
 position = Vector2(683, -321)
 can_look_up = true
 

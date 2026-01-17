@@ -4,11 +4,11 @@
 [ext_resource type="PackedScene" uid="uid://cpaiie4a57pij" path="res://Objects/HUD.tscn" id="2_321yd"]
 [ext_resource type="TileSet" uid="uid://d2upg53hfj06h" path="res://Textures/level_tiles.tres" id="3_1xify"]
 [ext_resource type="PackedScene" uid="uid://c735x8lpkf6dh" path="res://Objects/door.tscn" id="4_kgnlk"]
-[ext_resource type="PackedScene" uid="uid://bnqh10gubjlg2" path="res://Objects/player.tscn" id="5_xagau"]
 [ext_resource type="PackedScene" uid="uid://ct7fclkjykqj0" path="res://Objects/scientist.tscn" id="6_321yd"]
 [ext_resource type="PackedScene" uid="uid://btnke3vt7ooru" path="res://Objects/star.tscn" id="7_1xify"]
 [ext_resource type="PackedScene" uid="uid://cn2shtf45floc" path="res://Objects/camera.tscn" id="8_kgnlk"]
 [ext_resource type="PackedScene" uid="uid://jqgqn3cbd6ae" path="res://Objects/security_guard.tscn" id="9_xagau"]
+[ext_resource type="PackedScene" uid="uid://cpmx88yud42pk" path="res://Objects/checkpoint.tscn" id="9_ytgun"]
 
 [node name="Level5" type="Node2D"]
 script = ExtResource("1_ki7po")
@@ -29,8 +29,7 @@ id = "end2_lvl_5"
 connected_room = "res://Levels/level_8.tscn"
 
 [node name="EndDoor1" parent="." instance=ExtResource("4_kgnlk")]
-position = Vector2(623, -512)
-rotation = 1.5707964
+position = Vector2(712, -455)
 id = "end1_lvl_5"
 connected_room = "res://Levels/level_6.tscn"
 
@@ -41,16 +40,13 @@ id = "start_lvl_5"
 connected_room = "res://Levels/level_4.tscn"
 
 [node name="End1" type="Marker2D" parent="."]
-position = Vector2(652, -514)
+position = Vector2(747, -470)
 
 [node name="End2" type="Marker2D" parent="."]
 position = Vector2(-903, -591)
 
 [node name="Start" type="Marker2D" parent="."]
 position = Vector2(-88, -161)
-
-[node name="player" parent="." instance=ExtResource("5_xagau")]
-position = Vector2(-89, -160)
 
 [node name="Scientist2" parent="." instance=ExtResource("6_321yd")]
 position = Vector2(-754, -176)
@@ -141,3 +137,6 @@ arc_degrees = 15.0
 reach = 300.0
 rotating = true
 rotation_clockwise = false
+
+[node name="Checkpoint" parent="." instance=ExtResource("9_ytgun")]
+position = Vector2(-12, -112)

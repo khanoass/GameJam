@@ -87,8 +87,6 @@ func _draw() -> void:
 		var hit = laser.get_collider()
 		if hit.is_in_group("bullet"):
 			return
-		if hit.is_in_group("player"):
-			print("Hit the player!")
 		end = laser.get_collision_point() - global_position
 
 	draw_line(start, end, Color.RED, 1)

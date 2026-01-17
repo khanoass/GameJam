@@ -1,10 +1,9 @@
-[gd_scene load_steps=10 format=3 uid="uid://doyu814w6n7wc"]
+[gd_scene load_steps=9 format=3 uid="uid://doyu814w6n7wc"]
 
 [ext_resource type="Script" uid="uid://c77yegnbpbdvg" path="res://Levels/level_8.gd" id="1_6u2hd"]
 [ext_resource type="PackedScene" uid="uid://cpaiie4a57pij" path="res://Objects/HUD.tscn" id="2_ruove"]
 [ext_resource type="TileSet" uid="uid://d2upg53hfj06h" path="res://Textures/level_tiles.tres" id="3_6uevo"]
 [ext_resource type="PackedScene" uid="uid://c735x8lpkf6dh" path="res://Objects/door.tscn" id="4_tnoys"]
-[ext_resource type="PackedScene" uid="uid://bnqh10gubjlg2" path="res://Objects/player.tscn" id="5_h4fhv"]
 [ext_resource type="PackedScene" uid="uid://cn2shtf45floc" path="res://Objects/camera.tscn" id="6_wnufy"]
 [ext_resource type="PackedScene" uid="uid://jqgqn3cbd6ae" path="res://Objects/security_guard.tscn" id="7_6u2hd"]
 [ext_resource type="PackedScene" uid="uid://ct7fclkjykqj0" path="res://Objects/scientist.tscn" id="7_kjt6y"]
@@ -36,9 +35,6 @@ connected_room = "res://Levels/level_5.tscn"
 
 [node name="End" type="Marker2D" parent="."]
 position = Vector2(-974, -586)
-
-[node name="player" parent="." instance=ExtResource("5_h4fhv")]
-position = Vector2(1015, -140)
 
 [node name="Start" type="Marker2D" parent="."]
 position = Vector2(1014, -139)

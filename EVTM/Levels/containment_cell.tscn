@@ -24,6 +24,7 @@ position = Vector2(27, -10)
 position = Vector2(119, -17)
 rotation = -1.5707964
 id = "lvl_0_1"
+locked = true
 connected_room = "res://Levels/level_1.tscn"
 
 [node name="door_2" parent="." instance=ExtResource("3_5hdxe")]

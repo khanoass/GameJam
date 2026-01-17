@@ -134,7 +134,11 @@ func die():
 	await get_tree().create_timer(4).timeout
 	
 	# Back to spawn point
-	get_tree().change_scene_to_file("res://Levels/containment_cell.tscn")
+	if GameState.get_checkpoint_level() == "":
+		get_tree().change_scene_to_file("res://Levels/containment_cell.tscn")
+		return
+	GameState.set_need_checkpoint()
+	get_tree().change_scene_to_file("res://Levels/purgatory.tscn")
 
 func entered_turret_fov():
 	_turrets_seeing += 1

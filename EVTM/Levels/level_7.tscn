@@ -1,10 +1,9 @@
-[gd_scene load_steps=10 format=3 uid="uid://b36rix65yt12h"]
+[gd_scene load_steps=9 format=3 uid="uid://b36rix65yt12h"]
 
 [ext_resource type="Script" uid="uid://dtpamvmppfjku" path="res://Levels/level_7.gd" id="1_k70mh"]
 [ext_resource type="PackedScene" uid="uid://cpaiie4a57pij" path="res://Objects/HUD.tscn" id="2_h2tu1"]
 [ext_resource type="TileSet" uid="uid://d2upg53hfj06h" path="res://Textures/level_tiles.tres" id="3_6yfys"]
 [ext_resource type="PackedScene" uid="uid://c735x8lpkf6dh" path="res://Objects/door.tscn" id="4_sdkrb"]
-[ext_resource type="PackedScene" uid="uid://bnqh10gubjlg2" path="res://Objects/player.tscn" id="5_krg5q"]
 [ext_resource type="PackedScene" uid="uid://cn2shtf45floc" path="res://Objects/camera.tscn" id="6_6yfys"]
 [ext_resource type="PackedScene" uid="uid://jqgqn3cbd6ae" path="res://Objects/security_guard.tscn" id="7_sdkrb"]
 [ext_resource type="PackedScene" uid="uid://btnke3vt7ooru" path="res://Objects/star.tscn" id="8_sdkrb"]
@@ -29,19 +28,15 @@ id = "end_lvl_7"
 connected_room = "res://Levels/level_3.tscn"
 
 [node name="StartDoor" parent="." instance=ExtResource("4_sdkrb")]
-position = Vector2(-256, -63)
-rotation = 1.5707964
+position = Vector2(-248, -55)
 id = "start_lvl_07"
 connected_room = "res://Levels/level_6.tscn"
 
 [node name="End" type="Marker2D" parent="."]
 position = Vector2(1181, -1456)
 
-[node name="player" parent="." instance=ExtResource("5_krg5q")]
-position = Vector2(-214, -57)
-
 [node name="Start" type="Marker2D" parent="."]
-position = Vector2(-234, -62)
+position = Vector2(-206, -66)
 
 [node name="Camera" parent="." instance=ExtResource("6_6yfys")]
 position = Vector2(334, -536)

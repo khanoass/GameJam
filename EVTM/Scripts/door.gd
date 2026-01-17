@@ -11,15 +11,19 @@ func _ready() -> void:
 	if id == "":
 		queue_free()
 		return
-	if GameState.is_door_unlocked(id) || !locked:
+	if GameState.is_door_unlocked(id):
 		unlock()
-	else: lock()
+	elif locked: 
+		lock()
+		
 
 func lock() -> void:
+	locked = true
 	rect.texture = load("res://Textures/door_locked.png")
 	collision.disabled = false
 
 func unlock() -> void:
+	locked = false
 	rect.texture = load("res://Textures/door_unlocked.png")
 	collision.disabled = true
 

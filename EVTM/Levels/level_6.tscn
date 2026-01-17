@@ -1,10 +1,9 @@
-[gd_scene load_steps=9 format=3 uid="uid://dh6noa4d2v4av"]
+[gd_scene load_steps=8 format=3 uid="uid://dh6noa4d2v4av"]
 
-[ext_resource type="Script" path="res://Levels/level_6.gd" id="1_5fc7w"]
+[ext_resource type="Script" uid="uid://cjbfto0ltfid4" path="res://Levels/level_6.gd" id="1_5fc7w"]
 [ext_resource type="PackedScene" uid="uid://cpaiie4a57pij" path="res://Objects/HUD.tscn" id="2_6okxb"]
 [ext_resource type="TileSet" uid="uid://d2upg53hfj06h" path="res://Textures/level_tiles.tres" id="3_al66v"]
 [ext_resource type="PackedScene" uid="uid://c735x8lpkf6dh" path="res://Objects/door.tscn" id="4_s3aiw"]
-[ext_resource type="PackedScene" uid="uid://bnqh10gubjlg2" path="res://Objects/player.tscn" id="5_qcwlp"]
 [ext_resource type="PackedScene" uid="uid://cn2shtf45floc" path="res://Objects/camera.tscn" id="6_6okxb"]
 [ext_resource type="PackedScene" uid="uid://jqgqn3cbd6ae" path="res://Objects/security_guard.tscn" id="7_al66v"]
 [ext_resource type="PackedScene" uid="uid://ct7fclkjykqj0" path="res://Objects/scientist.tscn" id="8_s3aiw"]
@@ -34,10 +33,7 @@ id = "start_6"
 connected_room = "res://Levels/level_5.tscn"
 
 [node name="End" type="Marker2D" parent="."]
-position = Vector2(800, -678)
-
-[node name="player" parent="." instance=ExtResource("5_qcwlp")]
-position = Vector2(-802, -600)
+position = Vector2(800, -666)
 
 [node name="Start" type="Marker2D" parent="."]
 position = Vector2(-802, -663)

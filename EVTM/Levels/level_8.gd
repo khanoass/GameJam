@@ -2,15 +2,18 @@ extends Node2D
 
 @onready var start = $Start
 @onready var end = $End
+@onready var player = preload("res://Objects/player.tscn")
 
 const ID := 8
 
 func _ready():
-	var player := get_tree().get_first_node_in_group("player")
-	if !player:
-		return false
-	player.global_position = getStartPosition(GameState.came_from(ID))
+	var p = player.instantiate() as Node2D
+	if !p:
+		return
+	add_child(p)
+	p.global_position = getStartPosition(GameState.do_need_checkpoint(), GameState.came_from(ID))
 
-func getStartPosition(c: int):
+func getStartPosition(b: bool, c: int) -> Vector2:
+	if b: return GameState.get_checkpoint_point()
 	if c == 9: return end.global_position
 	return start.global_position

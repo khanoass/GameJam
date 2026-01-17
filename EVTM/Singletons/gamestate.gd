@@ -16,6 +16,9 @@ var collected_stars := {}
 var stars_count := 0
 signal stars_count_changed(new_count: int)
 
+var checkpoint := ""
+var need_checkpoint := false
+
 # Came from
 func came_from(arrived_at: int) -> int:
 	var temp = came_from_lvl
@@ -83,3 +86,25 @@ func powerup_is_collected(id: String) -> bool:
 
 func powerup_is_active(powerup: Powerup) -> bool:
 	return active_powerups.has(powerup)
+	
+# Checkpoint
+func set_checkpoint(s: String):
+	checkpoint = s
+
+func set_need_checkpoint():
+	need_checkpoint = true
+
+func do_need_checkpoint():
+	var n = need_checkpoint
+	need_checkpoint = false
+	return n
+
+func get_checkpoint_level() -> String:
+	if checkpoint == "":
+		return ""
+	return checkpoint.split(";")[0]
+
+func get_checkpoint_point() -> Vector2:
+	if checkpoint == "":
+		return Vector2.ZERO
+	return Vector2(int(checkpoint.split(";")[1]), int(checkpoint.split(";")[2]))

@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="EVTM"
-run/main_scene="uid://be3cyohjesi7v"
+run/main_scene="uid://bp05hvx5sk7h6"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://Textures/icon.svg"
 
