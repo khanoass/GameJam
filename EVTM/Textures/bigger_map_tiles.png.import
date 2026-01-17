@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bdng10mfgr6y3"
-path="res://.godot/imported/bigger_map_tiles.png-93e70de7a11b0f2ce0e237312ef86e21.ctex"
+path="res://.godot/imported/bigger_map_tiles.png-f724b5ace912c3e0451ff3b8c72db0fb.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Textures/bigger_map_tiles.png"
-dest_files=["res://.godot/imported/bigger_map_tiles.png-93e70de7a11b0f2ce0e237312ef86e21.ctex"]
+source_file="res://textures/bigger_map_tiles.png"
+dest_files=["res://.godot/imported/bigger_map_tiles.png-f724b5ace912c3e0451ff3b8c72db0fb.ctex"]
 
 [params]
 
