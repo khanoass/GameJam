@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dhmlkmluer50"
-path="res://.godot/imported/door_unlocked.png-b256796055164f0110df08e65da879ff.ctex"
+path="res://.godot/imported/door_unlocked.png-98d680fba534155ba80a3498e9c0ef9f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Textures/door_unlocked.png"
-dest_files=["res://.godot/imported/door_unlocked.png-b256796055164f0110df08e65da879ff.ctex"]
+source_file="res://textures/door_unlocked.png"
+dest_files=["res://.godot/imported/door_unlocked.png-98d680fba534155ba80a3498e9c0ef9f.ctex"]
 
 [params]
 
