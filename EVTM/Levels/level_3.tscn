@@ -37,8 +37,8 @@ powerup = ExtResource("7_ck3gp")
 [node name="door2" parent="." instance=ExtResource("5_padch")]
 position = Vector2(-281, 172)
 rotation = 1.5707964
-id = "start_lvl_3"
-connected_room = "res://Levels/containment_cell.tscn"
+id = "end_lvl_3"
+connected_room = "res://Levels/level_7.tscn"
 
 [node name="door" parent="." instance=ExtResource("5_padch")]
 position = Vector2(9, -64)

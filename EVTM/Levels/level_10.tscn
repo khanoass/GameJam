@@ -1,6 +1,6 @@
 [gd_scene load_steps=10 format=3 uid="uid://be3cyohjesi7v"]
 
-[ext_resource type="Script" uid="uid://djnpwkwxsthqs" path="res://Levels/level_10.gd" id="1_752rg"]
+[ext_resource type="Script" path="res://Levels/level_10.gd" id="1_752rg"]
 [ext_resource type="PackedScene" uid="uid://cpaiie4a57pij" path="res://Objects/HUD.tscn" id="2_gu58g"]
 [ext_resource type="TileSet" uid="uid://d2upg53hfj06h" path="res://Textures/level_tiles.tres" id="3_55fqf"]
 [ext_resource type="PackedScene" uid="uid://c735x8lpkf6dh" path="res://Objects/door.tscn" id="4_wn6d5"]
@@ -25,7 +25,7 @@ layer_0/tile_data = PackedInt32Array(-2097179, 196608, 0, -2031643, 196608, 0, -
 [node name="StartDoor" parent="." instance=ExtResource("4_wn6d5")]
 position = Vector2(-341, -223)
 rotation = 1.5707964
-id = "end_lvl_-1"
+id = "start_10"
 connected_room = "res://Levels/level_9.tscn"
 
 [node name="End" type="Marker2D" parent="."]

@@ -12,6 +12,5 @@ func _ready():
 	player.global_position = getStartPosition(GameState.came_from(ID))
 
 func getStartPosition(c: int):
-	if c == 1: return end.global_position
-	if c == 1: return end.global_position
+	if c == 3: return end.global_position
 	return start.global_position
