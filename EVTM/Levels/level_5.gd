@@ -13,6 +13,6 @@ func _ready():
 	player.global_position = getStartPosition(GameState.came_from(ID))
 
 func getStartPosition(c: int):
-	if c == 8: return end1.global_position
-	if c == 6: return end2.global_position
+	if c == 8: return end2.global_position
+	if c == 6: return end1.global_position
 	return start.global_position
